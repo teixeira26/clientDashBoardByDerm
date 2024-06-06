@@ -47,6 +47,12 @@ import { roles } from './constants/roles.js';
 function App() {
   const [userRole, setUserRole] = useState(null)
   const navigate = useNavigate()
+  const [oldUser, setOldUser] = useState(null)
+  
+  useEffect(()=>{
+    setOldUser(JSON.parse(localStorage.getItem('user')))
+    // if(userRole.role === roles.INITIAL) navigate('/dashboard')
+  }, [])
   useEffect(()=>{
     if(userRole){
       console.log(userRole)
@@ -56,14 +62,14 @@ function App() {
   return (
     <div className="App">
       <Routes>
-      {!userRole && 
+      {!userRole && !oldUser && 
       <>
       <Route path="register" element={<Register />} />
       <Route path="*" element={<Login setUserRole={setUserRole}/>} />
       </>
 }
         {/* <Route path="home" element={<Home />} /> */}
-       {userRole &&
+       {userRole || oldUser &&
        <>
         <Route path="features" element={<Features />} />
         <Route path="customer-stories" element={<CustomerStories />} />

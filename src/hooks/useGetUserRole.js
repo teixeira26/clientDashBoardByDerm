@@ -4,9 +4,9 @@ export default function useGetUserRole() {
     const [userInfo, setUserInfo] = useState()
 
     useEffect(()=>{
-        console.log(localStorage.getItem('user'))
+        setUserInfo(localStorage.getItem('user'))
     },[])
   return (
-    [userInfo, setUserInfo]
+    userInfo
   )
 }
