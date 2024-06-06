@@ -1,0 +1,17 @@
+{
+  "files": {
+    "main.css": "/static/css/main.9875f1a3.css",
+    "main.js": "/static/js/main.4dc4c95b.js",
+    "static/media/register.gif": "/static/media/register.99f2e2b5dcfe78daaaea.gif",
+    "static/media/Montasim.jpg": "/static/media/Montasim.351ba7cfac2b5d06ae53.jpg",
+    "static/media/logo.png": "/static/media/logo.a108282c884587f065a2.png",
+    "static/media/user.png": "/static/media/user.fa9d2d6de0b7c32553d8.png",
+    "index.html": "/index.html",
+    "main.9875f1a3.css.map": "/static/css/main.9875f1a3.css.map",
+    "main.4dc4c95b.js.map": "/static/js/main.4dc4c95b.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.9875f1a3.css",
+    "static/js/main.4dc4c95b.js"
+  ]
+}
