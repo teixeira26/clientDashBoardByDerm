@@ -230,7 +230,7 @@ const Moviments = () => {
       <table className="table table-zebra table-compact">
         <thead>{tableHead}</thead>
         <tbody>
-          {moviments.map((moviment, index) => (
+          {moviments.sort((a, b) => new Date(a.date) - new Date(b.date)).map((moviment, index) => (
             <TableRow
               key={moviment._id}
               tableRowsData={[

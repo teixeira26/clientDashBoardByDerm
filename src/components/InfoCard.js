@@ -1,12 +1,18 @@
-import React from 'react';
+import React from "react";
 
-const InfoCard = ({ extraClass, name, status }) => {
-    return (
-        <div className={`${extraClass} flex flex-col items-center justify-center gap-2 bg-white rounded-[4px] p-2 shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)] text-black`}>
-            <p className='font-semibold text-center'>{name}</p>
-            <h3 className="text-xl font-bold badge badge-lg badge-secondary bg-[#E87722] text-white">{status}</h3>
-        </div>
-    );
+const InfoCard = ({ extraClass, name, status, icon, porcentaje }) => {
+  return (
+    <div
+      className={`${extraClass} rounded-[4px] border bg-card text-card-foreground shadow`}
+    >
+      <div className="px-6 pb-2 pt-6 flex flex-row items-center justify-between space-y-0">
+        <p className="tracking-tight text-sm font-medium">{name}</p>
+        {icon}
+      </div>
+      <h3 className="text-2xl font-bold px-6">{status}</h3>
+      <p className="text-xs text-muted-foreground px-6 pb-6">+{porcentaje}%</p>
+    </div>
+  );
 };
 
 export default InfoCard;
