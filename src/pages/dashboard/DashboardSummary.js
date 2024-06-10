@@ -19,13 +19,34 @@ import visitsPerMonth from "../../Services/Grafics/visitsPerMonth";
 import { visitsPerApm } from "../../Services/Grafics/visitsPerAPM";
 import { visitsPerAPMPerDay } from "../../Services/Grafics/visitsPerAPMPerDay";
 import { getAllVisitsWithComments } from "../../Services/Grafics/getAllVisitsWithComments";
+import { getRealAPMName } from "../../Services/getRealApmNames";
+import { getMonthInSpanish } from "../../Services/Grafics/getMonthInSpanish";
 
 const DashboardSummary = () => {
   const [infoUnfiltered, setInfoUnfiltered] = useState(null);
   const [chartData, setChartData] = useState(null);
   const [comments, setComments] = useState(null);
   const [actualMonth, setActualMonth] = useState(null);
-  const [title, setTitle] = useState("Visitas por APM - Junio 2024");
+  const [actualApm, setActualApm] = useState(null);
+  const [title, setTitle] = useState(
+    `Visitas por APM - ${getMonthInSpanish(new Date().getMonth())} 2024`
+  );
+  const[visitsCardValue, setVisitsCardValue] = useState(null);
+  const[visitsCardTitle, setVisitsCardTitle] = useState('Visitas en el més de')
+
+
+  window.addEventListener("load", () => {
+    const leftBox = document.getElementById("left-box");
+    const rightBox = document.getElementById("right-box");
+    rightBox.style.height = `${leftBox.offsetHeight}px`;
+  });
+
+  window.addEventListener("resize", () => {
+    const leftBox = document.getElementById("left-box");
+    const rightBox = document.getElementById("right-box");
+    rightBox.style.height = `${leftBox.offsetHeight}px`;
+    rightBox.style.maxHeight = `${leftBox.offsetHeight}px`;
+  });
 
   const handleClick = (event) => {
     const { activeTooltipIndex } =
@@ -35,6 +56,25 @@ const DashboardSummary = () => {
       if (title.includes("Visitas por APM")) {
         setChartData(
           visitsPerApm(chartData[activeTooltipIndex].apm, infoUnfiltered)
+        );
+        setVisitsCardValue( visitsPerApm(chartData[activeTooltipIndex].apm, infoUnfiltered).reduce((acc, curr) => {
+          return acc + curr.totalFarmacias + curr.totalMedico + curr.totalWhatsApp;
+        }, 0))
+        setVisitsCardTitle(`Visitas totales de ${chartData[activeTooltipIndex].apm} en los últimos meses`)
+        setActualApm(chartData[activeTooltipIndex].apm);
+        setComments(
+          infoUnfiltered
+            .filter((x) => x.APM === chartData[activeTooltipIndex].apm)
+            .map((visit) => {
+              return {
+                comentarios: visit["COMENTARIOS"],
+                apm: visit.APM,
+                fecha: visit.FECHA,
+                tipoDeContacto: visit["TIPO DE CONTACTO"],
+                tipoDeVisita: visit["TIPO DE VISITA"],
+                contacto: visit["CONTACTO"],
+              };
+            })
         );
         setTitle(
           `Visitas de ${chartData[activeTooltipIndex].apm} en los últimos meses`
@@ -48,42 +88,177 @@ const DashboardSummary = () => {
             parseInt(chartData[activeTooltipIndex].fecha.split("/")[0])
           )
         );
+        setVisitsCardValue(  visitsPerAPMPerDay(
+          infoUnfiltered,
+          chartData[activeTooltipIndex].apm,
+          parseInt(chartData[activeTooltipIndex].fecha.split("/")[0])
+        ).reduce((acc, curr) => {
+          return acc + curr.totalFarmacias + curr.totalMedico + curr.totalWhatsApp;
+        }, 0))
+        setVisitsCardTitle(`Visitas totales de ${chartData[activeTooltipIndex].apm} en ${getMonthInSpanish(chartData[activeTooltipIndex].fecha.split("/")[0] - 1)}`)
+        setActualMonth(
+          parseInt(chartData[activeTooltipIndex].fecha.split("/")[0])
+        );
+        setComments(
+          infoUnfiltered
+            .filter((x) => {
+              const visitDate = new Date(x.FECHA);
+              const chartDate = parseInt(
+                chartData[activeTooltipIndex].fecha.split("/")[0]
+              );
+              return (
+                x.APM === chartData[activeTooltipIndex].apm &&
+                visitDate.getMonth() === chartDate - 1
+              );
+            })
+            .map((visit) => {
+              return {
+                comentarios: visit["COMENTARIOS"],
+                apm: visit.APM,
+                fecha: visit.FECHA,
+                tipoDeContacto: visit["TIPO DE CONTACTO"],
+                tipoDeVisita: visit["TIPO DE VISITA"],
+                contacto: visit["CONTACTO"],
+              };
+            })
+        );
         setTitle(
           `Visitas de ${chartData[activeTooltipIndex].apm} - ${chartData[activeTooltipIndex].fecha}`
         );
       }
-      console.log(chartData[activeTooltipIndex]);
     }
   };
 
   useEffect(() => {
     fetch(`${BACKEND_URL}/visits/getAll`)
       .then(async (res) => {
-        const response = await res.json();
-        setActualMonth(new Date().getMonth())
+        let response = await res.json();
+        response = response.map((x) => {
+          return { ...x, APM: getRealAPMName(x.APM) };
+        });
+        setActualMonth(new Date().getMonth());
         setInfoUnfiltered(response);
-        setChartData(visitsPerMonth(response, new Date().getMonth() -1));
-        setComments(getAllVisitsWithComments(response))
+        setChartData(visitsPerMonth(response, new Date().getMonth()));
+        setComments(getAllVisitsWithComments(response));
+        setVisitsCardValue(visitsPerMonth(response, new Date().getMonth()).reduce((acc, curr) => {
+          return acc + curr.totalFarmacias + curr.totalMedico + curr.totalWhatsApp;
+        }, 0))
       })
+      
       .catch((err) => {
         console.log(err);
       });
   }, []);
 
-  const data = [
-    { time: "2018-12-25", medicos: 27.32, Farmacias: 21.32, name: "GBA.OESTE" },
-    { time: "2018-12-25", medicos: 27.32, Farmacias: 21.32, name: "CORDOBA" },
-    { time: "2018-12-25", medicos: 27.32, Farmacias: 21.32, name: "LA PLATA" },
-    { time: "2018-12-25", medicos: 27.32, Farmacias: 21.32, name: "GBA.SUR" },
-  ];
+  const handleZoomOut =()=>{
+    setChartData(visitsPerMonth(infoUnfiltered, new Date().getMonth()));
+    setVisitsCardValue(visitsPerMonth(infoUnfiltered, new Date().getMonth()).reduce((acc, curr) => {
+      return acc + curr.totalFarmacias + curr.totalMedico + curr.totalWhatsApp;
+    }, 0))       
+     setVisitsCardTitle(`Visitas totales en el més de ${getMonthInSpanish(new Date().getMonth())}`)
 
-  const [pharmacyProducts, setPharmacyProducts] = useState([]);
+    setComments(getAllVisitsWithComments(infoUnfiltered));
+    setActualMonth(new Date().getMonth());
+    setTitle( `Visitas por APM - ${getMonthInSpanish(new Date().getMonth())} 2024`)
 
-  useEffect(() => {
-    fetch("https://stringlab-ims-server.herokuapp.com/api/products/pharmacy")
-      .then((res) => res.json())
-      .then((products) => setPharmacyProducts(products.length));
-  }, [pharmacyProducts]);
+  }
+
+  const handlePreviousMonthClick = () => {
+    if (actualMonth > new Date().getMonth() - 2) {
+      const month = actualMonth - 1; // Ajusta para obtener el mes anterior
+      if (title.includes("Visitas por APM")) {
+        setChartData(visitsPerMonth(infoUnfiltered, month));
+        setVisitsCardValue(visitsPerMonth(infoUnfiltered, month).reduce((acc, curr) => {
+          return acc + curr.totalFarmacias + curr.totalMedico + curr.totalWhatsApp;
+        }, 0))
+        setTitle(`Visitas por APM - ${getMonthInSpanish(month)} 2024`);
+        setVisitsCardTitle(`Visitas por APM en el mes de ${getMonthInSpanish(month)}`)
+        setActualMonth(month);
+      }
+
+      if (
+        title.includes("Visitas de") &&
+        !title.includes("en los últimos meses")
+      ) {
+        setChartData(visitsPerAPMPerDay(infoUnfiltered, actualApm, month + 1));
+        setVisitsCardValue(visitsPerAPMPerDay(infoUnfiltered, actualApm, month + 1).reduce((acc, curr) => {
+          return acc + curr.totalFarmacias + curr.totalMedico + curr.totalWhatsApp;
+        }, 0))
+        setVisitsCardTitle(`Visitas totales de ${actualApm} en ${getMonthInSpanish(month)}`)
+
+        setComments(
+          infoUnfiltered
+            .filter((x) => {
+              const visitDate = new Date(x.FECHA);
+              return x.APM === actualApm && visitDate.getMonth() === month;
+            })
+            .map((visit) => {
+              return {
+                comentarios: visit["COMENTARIOS"],
+                apm: visit.APM,
+                fecha: visit.FECHA,
+                tipoDeContacto: visit["TIPO DE CONTACTO"],
+                tipoDeVisita: visit["TIPO DE VISITA"],
+                contacto: visit["CONTACTO"],
+              };
+            })
+        );
+        setTitle(
+          `Visitas de ${actualApm} - ${month + 1}/${new Date().getFullYear()}`
+        );
+        setActualMonth(month);
+      }
+    }
+  };
+
+  const handleNextMonthClick = () => {
+    if (actualMonth < new Date().getMonth()) {
+      const month = actualMonth + 1; // Ajusta para obtener el mes siguiente
+      if (title.includes("Visitas por APM")) {
+        setChartData(visitsPerMonth(infoUnfiltered, month));
+        setTitle(`Visitas por APM - ${getMonthInSpanish(month)} 2024`);
+        setActualMonth(month);
+        setVisitsCardValue(visitsPerMonth(infoUnfiltered, month).reduce((acc, curr) => {
+          return acc + curr.totalFarmacias + curr.totalMedico + curr.totalWhatsApp;
+        }, 0))
+        setVisitsCardTitle(`Visitas por APM en el mes de ${getMonthInSpanish(month)}`)
+
+      }
+
+      if (
+        title.includes("Visitas de") &&
+        !title.includes("en los últimos meses")
+      ) {
+        setChartData(visitsPerAPMPerDay(infoUnfiltered, actualApm, month + 1));
+        setComments(
+          infoUnfiltered
+            .filter((x) => {
+              const visitDate = new Date(x.FECHA);
+              return x.APM === actualApm && visitDate.getMonth() === month;
+            })
+            .map((visit) => {
+              return {
+                comentarios: visit["COMENTARIOS"],
+                apm: visit.APM,
+                fecha: visit.FECHA,
+                tipoDeContacto: visit["TIPO DE CONTACTO"],
+                tipoDeVisita: visit["TIPO DE VISITA"],
+                contacto: visit["CONTACTO"],
+              };
+            })
+        );
+        setTitle(
+          `Visitas de ${actualApm} - ${month + 1}/${new Date().getFullYear()}`
+        );
+        setActualMonth(month);
+        setVisitsCardValue(visitsPerMonth(infoUnfiltered, month).reduce((acc, curr) => {
+          return acc + curr.totalFarmacias + curr.totalMedico + curr.totalWhatsApp;
+        }, 0))
+        setVisitsCardTitle(`Visitas totales de ${actualApm} en ${getMonthInSpanish(month)}`)
+      }
+    }
+  };
+
 
   return (
     <div className="p-4 mt-16">
@@ -94,19 +269,30 @@ const DashboardSummary = () => {
 
       <div className="grid grid-cols-4 gap-4 mb-4">
         <InfoCard
-porcentaje={'20'}
-
-          name={"Visitas en el més de Junio"}
-          status={369}
+          porcentaje={"20"}
+          name={visitsCardTitle}
+          status={visitsCardValue}
           icon={
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="h-4 w-4 text-muted-foreground"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              class="h-4 w-4 text-muted-foreground"
+            >
+              <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+              <circle cx="9" cy="7" r="4"></circle>
+              <path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"></path>
+            </svg>
           }
         />
         <InfoCard
-porcentaje={'???'}
-
+          porcentaje={""}
           name={"Recetas en el més de Junio"}
-          status={'386'}
+          status={"Proximamente"}
           icon={
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -129,25 +315,117 @@ porcentaje={'???'}
           }
         />
         <InfoCard
-        porcentaje={'???'}
-        name={"Previstos hechos en el més de Junio"} status={'???'} 
-        icon={
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="h-4 w-4 text-muted-foreground"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg>}
+          porcentaje={""}
+          name={"Previstos hechos en el més de Junio"}
+          status={"Proximamente"}
+          icon={
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              class="h-4 w-4 text-muted-foreground"
+            >
+              <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+            </svg>
+          }
         />
         <InfoCard
-        porcentaje={'???'}
-        name={"Transfers hechos en el més de Junio"} status={'???'} 
-        icon={
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="h-4 w-4 text-muted-foreground"><rect width="20" height="14" x="2" y="5" rx="2"></rect><path d="M2 10h20"></path></svg>
-        }
+          porcentaje={""}
+          name={"Transfers hechos en el més de Junio"}
+          status={"Proximamente"}
+          icon={
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              class="h-4 w-4 text-muted-foreground"
+            >
+              <rect width="20" height="14" x="2" y="5" rx="2"></rect>
+              <path d="M2 10h20"></path>
+            </svg>
+          }
         />
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-        <div className="w-full aspect-video rounded-[4px] flex justify-start gap-2 flex-col shadow pb-5 col-span-2">
-          <p className="font-semibold leading-none tracking-tight px-6 pt-6 pb-2">
-            {title}
-          </p>
+        <div
+          className="w-full aspect-video rounded-[4px] flex justify-start gap-2 flex-col shadow pb-5 col-span-2 "
+          id="left-box"
+        >
+          <div className="flex justify-between items-center pt-6">
+            <div className="flex">
+              <p className="font-semibold leading-none tracking-tight px-6 pb-2">
+                {title}
+              </p>
+              {!title.includes('Visitas por APM') && <div className="hover:bg-[#00000025] cursor-pointer" onClick={()=>handleZoomOut()} title="Zoom out">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16px"
+                  height="16px"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                >
+                  <path
+                    d="M15 4V7C15 8.10457 15.8954 9 17 9H20M9 4V7C9 8.10457 8.10457 9 7 9H4M15 20V17C15 15.8954 15.8954 15 17 15H20M9 20V17C9 15.8954 8.10457 15 7 15H4"
+                    stroke="#000000"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </div>}
+            </div>
+
+            <div className="flex">
+              <div
+                className="hover:bg-[#00000025] mr-6 cursor-pointer"
+                onClick={() => handlePreviousMonthClick()}
+                title="Més Anterior"
+              >
+                <svg
+                  className=" rotate-180"
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16px"
+                  height="16px"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                >
+                  <path
+                    d="M9.71069 18.2929C10.1012 18.6834 10.7344 18.6834 11.1249 18.2929L16.0123 13.4006C16.7927 12.6195 16.7924 11.3537 16.0117 10.5729L11.1213 5.68254C10.7308 5.29202 10.0976 5.29202 9.70708 5.68254C9.31655 6.07307 9.31655 6.70623 9.70708 7.09676L13.8927 11.2824C14.2833 11.6729 14.2833 12.3061 13.8927 12.6966L9.71069 16.8787C9.32016 17.2692 9.32016 17.9023 9.71069 18.2929Z"
+                    fill="#0F0F0F"
+                  />
+                </svg>
+              </div>
+              <div
+                className="hover:bg-[#00000025] mr-6 cursor-pointer"
+                onClick={() => handleNextMonthClick()}
+                title="Mes posterior"
+              >
+                <svg
+                  className=""
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16px"
+                  height="16px"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                >
+                  <path
+                    d="M9.71069 18.2929C10.1012 18.6834 10.7344 18.6834 11.1249 18.2929L16.0123 13.4006C16.7927 12.6195 16.7924 11.3537 16.0117 10.5729L11.1213 5.68254C10.7308 5.29202 10.0976 5.29202 9.70708 5.68254C9.31655 6.07307 9.31655 6.70623 9.70708 7.09676L13.8927 11.2824C14.2833 11.6729 14.2833 12.3061 13.8927 12.6966L9.71069 16.8787C9.32016 17.2692 9.32016 17.9023 9.71069 18.2929Z"
+                    fill="#0F0F0F"
+                  />
+                </svg>
+              </div>
+            </div>
+          </div>
+
           <ResponsiveContainer width="100%" height="100%">
             <BarChart
               onClick={handleClick}
@@ -159,6 +437,7 @@ porcentaje={'???'}
                       return {
                         Medicos: x.totalMedico,
                         Farmacias: x.totalFarmacias,
+                        Whatsapp: x.totalWhatsApp,
                         name:
                           title.includes("Tus visitas en los últimos meses") ||
                           title.includes("Visitas de")
@@ -181,54 +460,65 @@ porcentaje={'???'}
               <Tooltip />
               <Legend />
               <Bar
+                dataKey="Whatsapp"
+                fill="#11d466"
+                activeBar={<Rectangle fill="pink" stroke="blue" />}
+              />
+              <Bar
                 dataKey="Medicos"
-                fill="#8884d8"
+                fill="#6611d4"
                 activeBar={<Rectangle fill="pink" stroke="blue" />}
               />
               <Bar
                 dataKey="Farmacias"
-                fill="#82ca9d"
+                fill="#d46611"
                 activeBar={<Rectangle fill="pink" stroke="blue" />}
               />
             </BarChart>
           </ResponsiveContainer>
         </div>
 
-        <div className="w-full aspect-video rounded-[4px] flex justify-start gap-2 flex-col shadow pb-5 ">
-          <p className="font-semibold leading-none tracking-tight px-6 pt-6 pb-2">
+        <div
+          className=" overflow-y-scroll rounded-[4px] flex justify-start gap-2 flex-col shadow pb-5 "
+          id="right-box"
+        >
+          <p className="font-semibold leading-none tracking-tight px-6 pt-6 pb-6">
             Ultimos comentarios realizados
           </p>
           <hr />
-          {comments &&
-          <div className="px-6">
- { comments.map(x=>{
-            return(
-              <div className="">
-                <div className="flex pt-6 pb-2 ">
-                  <div className="bg-[#f8dfb7] mr-4 w-8 h-8 rounded-full flex justify-center items-center"><p className="font-semibold">
-                  {x.apm[0]}
-                    </p></div>
-                    <></>
-                <p className="font-semibold leading-none tracking-tight  ">
-                  {x.apm}
-                </p>
-                <p className="text-xs text-muted-foreground px-4 text-[12px]">{x.fecha}</p>
-               
-                </div>
-               
-                <p>
-                  {x.comentarios}
-                </p>
-                <p className="text-xs text-muted-foreground text-[12px]">relacionado con {x.tipoDeContacto.toLowerCase() === 'medico' ? 'el' : 'la'} {x.tipoDeContacto.toLowerCase()} <span className="font-semibold">{x.contacto}</span></p>
-                <div>
-              
-                </div>
-              </div>
-            )
-          })}
-          </div>
-        
-          }
+          {comments && (
+            <div className="px-6 ">
+              {comments.map((x, index) => {
+                return (
+                  <div className="" key={index}>
+                    <div className="flex pt-6 pb-2 ">
+                      <div className="bg-[#f8dfb7] mr-4 w-8 h-8 rounded-full flex justify-center items-center">
+                        <p className="font-semibold">{x.apm ? x.apm[0] : ''}</p>
+                      </div>
+                      <></>
+                      <p className="font-semibold leading-none tracking-tight  ">
+                        {x.apm}
+                      </p>
+                      <p className="text-xs text-muted-foreground px-4 text-[12px]">
+                        {x.fecha}
+                      </p>
+                    </div>
+
+                    <p>{x.comentarios}</p>
+                    <p className="text-xs text-muted-foreground text-[12px]">
+                      relacionado con{" "}
+                      {x.tipoDeContacto?.toLowerCase() === "medico"
+                        ? "el"
+                        : "la"}{" "}
+                      {x.tipoDeContacto?.toLowerCase()}{" "}
+                      <span className="font-semibold">{x.contacto}</span>
+                    </p>
+                    <div></div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
         </div>
       </div>
     </div>

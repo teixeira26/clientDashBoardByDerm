@@ -18,7 +18,8 @@ export const visitsPerAPMPerDay = (visits, apm, month) => {
       const existingVisit = groupedVisits.find(item => item.fecha === key);
   
       if (existingVisit) {
-        if (visit['TIPO DE CONTACTO'].toUpperCase() === 'MEDICO') {
+        if(visit['TIPO DE VISITA'].toUpperCase() === 'WHATSAPP') existingVisit.totalWhatsApp += 1;
+        else if (visit['TIPO DE CONTACTO'].toUpperCase() === 'MEDICO') {
           existingVisit.totalMedico += 1;
         } else if (visit['TIPO DE CONTACTO'].toUpperCase() === 'FARMACIA') {
           existingVisit.totalFarmacias += 1;
@@ -28,7 +29,8 @@ export const visitsPerAPMPerDay = (visits, apm, month) => {
           fecha: key,
           apm: apm,
           totalMedico: visit['TIPO DE CONTACTO'].toUpperCase() === 'MEDICO' ? 1 : 0,
-          totalFarmacias: visit['TIPO DE CONTACTO'].toUpperCase() === 'FARMACIA' ? 1 : 0
+          totalFarmacias: visit['TIPO DE CONTACTO'].toUpperCase() === 'FARMACIA' ? 1 : 0,
+          totalWhatsApp: visit['TIPO DE VISITA'].toUpperCase() === 'WHATSAPP' ? 1 : 0
         });
       }
     });

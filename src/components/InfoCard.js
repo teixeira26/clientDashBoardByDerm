@@ -9,8 +9,8 @@ const InfoCard = ({ extraClass, name, status, icon, porcentaje }) => {
         <p className="tracking-tight text-sm font-medium">{name}</p>
         {icon}
       </div>
-      <h3 className="text-2xl font-bold px-6">{status}</h3>
-      <p className="text-xs text-muted-foreground px-6 pb-6">+{porcentaje}%</p>
+      <h3 className="text-2xl font-bold px-6 pb-6">{status}</h3>
+      {/* <p className="text-xs text-muted-foreground px-6 pb-6">{porcentaje}%</p> */}
     </div>
   );
 };
