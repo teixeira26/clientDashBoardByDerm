@@ -22,6 +22,11 @@ import { getAllVisitsWithComments } from "../../Services/Grafics/getAllVisitsWit
 import { getRealAPMName } from "../../Services/getRealApmNames";
 import { getMonthInSpanish } from "../../Services/Grafics/getMonthInSpanish";
 
+function convertDateFormat(dateString) {
+  const [year, month, day] = dateString.split('-');
+  return `${day}/${month}/${year}`;
+}
+
 const DashboardSummary = () => {
   const [infoUnfiltered, setInfoUnfiltered] = useState(null);
   const [chartData, setChartData] = useState(null);
@@ -501,7 +506,7 @@ const DashboardSummary = () => {
                         {x.apm}
                       </p>
                       <p className="text-xs text-muted-foreground px-4 text-[12px]">
-                        {x.fecha}
+                        {convertDateFormat(x.fecha)}
                       </p>
                     </div>
 
