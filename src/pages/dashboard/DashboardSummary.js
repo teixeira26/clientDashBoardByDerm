@@ -143,8 +143,9 @@ const DashboardSummary = () => {
         setVisitsCardValue(visitsPerMonth(response, new Date().getMonth()).reduce((acc, curr) => {
           return acc + curr.totalFarmacias + curr.totalMedico + curr.totalWhatsApp;
         }, 0))
+        setVisitsCardTitle(`Visitas totales en el més de ${getMonthInSpanish(new Date().getMonth())}`)
+
       })
-      
       .catch((err) => {
         console.log(err);
       });
