@@ -1,9 +1,9 @@
 import React from "react";
 
-const InfoCard = ({ extraClass, name, status, icon, porcentaje }) => {
+const InfoCard = ({ extraClass, name, status, icon, porcentaje, desktop, responsive }) => {
   return (
     <div
-      className={`${extraClass} rounded-[4px] border bg-card text-card-foreground shadow`}
+      className={`${extraClass} rounded-[4px] border bg-card text-card-foreground shadow ${responsive &&  ' md:hidden' } ${desktop &&  'hidden md:block' }`}
     >
       <div className="px-6 pb-2 pt-6 flex flex-row items-center justify-between space-y-0">
         <p className="tracking-tight text-sm font-medium">{name}</p>

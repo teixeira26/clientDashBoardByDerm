@@ -273,7 +273,7 @@ const DashboardSummary = () => {
         <PrintButton />
       </div>
 
-      <div className="grid grid-cols-4 gap-4 mb-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
         <InfoCard
           porcentaje={"20"}
           name={visitsCardTitle}
@@ -299,6 +299,7 @@ const DashboardSummary = () => {
           porcentaje={""}
           name={"Recetas en el més de Junio"}
           status={"Proximamente"}
+          desktop
           icon={
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -324,6 +325,7 @@ const DashboardSummary = () => {
           porcentaje={""}
           name={"Previstos hechos en el més de Junio"}
           status={"Proximamente"}
+          desktop
           icon={
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -343,6 +345,7 @@ const DashboardSummary = () => {
           porcentaje={""}
           name={"Transfers hechos en el més de Junio"}
           status={"Proximamente"}
+          desktop
           icon={
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -363,7 +366,7 @@ const DashboardSummary = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
         <div
-          className="w-full aspect-video rounded-[4px] flex justify-start gap-2 flex-col shadow pb-5 col-span-2 "
+          className="w-full aspect-[16/20] md:aspect-[16/8] rounded-[4px] flex justify-start gap-2 flex-col shadow pb-5 col-span-2 "
           id="left-box"
         >
           <div className="flex justify-between items-center pt-6">
@@ -432,7 +435,7 @@ const DashboardSummary = () => {
             </div>
           </div>
 
-          <ResponsiveContainer width="100%" height="100%">
+          <ResponsiveContainer width="100%" height="78%">
             <BarChart
               onClick={handleClick}
               width={500}
@@ -454,35 +457,50 @@ const DashboardSummary = () => {
                   : []
               }
               margin={{
-                top: 5,
+                top: 0,
                 right: 30,
                 left: -10,
-                bottom: 10,
+                bottom: 55,
               }}
             >
               <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name" fontSize={"12px"} />
+              <XAxis dataKey="name" fontSize={"12px"} angle={-45} interval={0} textAnchor="end"/>
               <YAxis />
               <Tooltip />
-              <Legend />
+              <Legend  verticalAlign="top" wrapperStyle={{ 
+                      textAlign: 'center', // Centrar horizontalmente
+                     marginTop: '10px',
+                     position: 'relative',
+                      width: '100%',      // Asegurar que ocupa todo el ancho
+              }}/>
               <Bar
                 dataKey="Whatsapp"
                 fill="#11d466"
+                stackId={title.includes("Visitas de") &&
+        title.includes("en los últimos meses") ? 'a' : "a"}
                 activeBar={<Rectangle fill="pink" stroke="blue" />}
               />
               <Bar
                 dataKey="Medicos"
                 fill="#6611d4"
+                stackId={title.includes("Visitas de") &&
+        title.includes("en los últimos meses") ? 'b' : "a"}
                 activeBar={<Rectangle fill="pink" stroke="blue" />}
               />
               <Bar
                 dataKey="Farmacias"
                 fill="#d46611"
+                stackId={title.includes("Visitas de") &&
+        title.includes("en los últimos meses") ? 'c' : "a"}
                 activeBar={<Rectangle fill="pink" stroke="blue" />}
               />
             </BarChart>
           </ResponsiveContainer>
         </div>
+       
+
+
+
 
         <div
           className=" overflow-y-scroll rounded-[4px] flex justify-start gap-2 flex-col shadow pb-5 "
@@ -525,6 +543,7 @@ const DashboardSummary = () => {
               })}
             </div>
           )}
+          
         </div>
       </div>
     </div>
