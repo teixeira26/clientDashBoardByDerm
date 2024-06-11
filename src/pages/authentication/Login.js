@@ -7,7 +7,7 @@ import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } f
 import { auth } from "../../firebase.config";
 import { getUserRole } from "../../Services/Users/getUserRole";
 
-const Login = ({setUserRole}) => {
+const Login = ({ setUserRole, popo }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -19,6 +19,7 @@ const Login = ({setUserRole}) => {
         const user = userCredential.user;
         localStorage.setItem('user', JSON.stringify(user))
         const role = await getUserRole(user.uid);
+        console.log(role, setUserRole, popo)
         setUserRole(role)
       })
       .catch((error) => {

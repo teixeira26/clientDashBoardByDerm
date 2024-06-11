@@ -43,72 +43,73 @@ import { useEffect, useState } from 'react';
 import { roles } from './constants/roles.js';
 
 function App() {
-  const [userRole, setUserRole] = useState(null)
-  const navigate = useNavigate()
-  const [oldUser, setOldUser] = useState(null)
-  
-  useEffect(()=>{
-    setOldUser(JSON.parse(localStorage.getItem('user')))
+  const [userRole, setUserRole] = useState(null);
+  const navigate = useNavigate();
+  const [oldUser, setOldUser] = useState(null);
+
+  useEffect(() => {
+    setOldUser(JSON.parse(localStorage.getItem('user')));
     // if(userRole.role === roles.INITIAL) navigate('/dashboard')
-  }, [])
-  useEffect(()=>{
-    if(userRole){
-      console.log(userRole)
-      if(userRole.role === roles.INITIAL) navigate('/dashboard')
+  }, []);
+
+  useEffect(() => {
+    if (userRole) {
+      console.log(userRole);
+      if (userRole.role === roles.INITIAL) navigate('/dashboard');
     }
-  }, [userRole])
+  }, [userRole, navigate]);
+
   return (
     <div className="App">
       <Routes>
-      {!userRole && !oldUser && 
-      <>
-      <Route path="register" element={<Register />} />
-      <Route path="*" element={<Login setUserRole={setUserRole}/>} />
-      </>
-}
+        {!userRole && !oldUser && 
+          <>
+            <Route path="register" element={<Register />} />
+            <Route path="*" element={<Login popo={'kdioksidj'} setUserRole={setUserRole} />} />
+          </>
+        }
         {/* <Route path="home" element={<Home />} /> */}
-       {userRole || oldUser &&
-       <>
-        <Route path="features" element={<Features />} />
-        <Route path="customer-stories" element={<CustomerStories />} />
-        <Route path="find-experts" element={<FindExperts />} />
-        <Route path="forgot-password" element={<ForgotPassword />} />
-        <Route path="register" element={<Register />} />
-        <Route path="integration" element={<Integrations />} />
-        <Route path="/" element={<Login />} />
-        <Route path="pricing" element={<Pricing />} />
-        <Route path="terms-and-conditions" element={<TermsAndConditions />} />
-        <Route path="privacy-policy" element={<PrivacyPolicy />} />
-        <Route path="resources" element={<Resources />} />
-        <Route path="about" element={<About />} />
-        <Route path="contact" element={<Contact />} />
-        <Route path="profile" element={<Profile />} />
-        <Route path="settings" element={<Settings />} />
-        <Route path="dashboard" element={<Dashboard />}>
-          <Route index element={<DashboardSummary />} />
-          <Route path='products/pharmacy' element={<PharmacyProducts />} />
-          <Route path='products/non-pharmacy' element={<Moviments />} />
-          <Route path='requested-items/pharmacy' element={<PharmacyItems />} />
-          <Route path='requested-items/non-pharmacy' element={<NonPharmacyItems />} />
-          <Route path='orders/pharmacy' element={<PharmacyOrders />} />
-          <Route path='orders/non-pharmacy' element={<NonPharmacyOrders />} />
-          <Route path='purchases/pharmacy' element={<PurchasePharmacyProducts />} />
-          <Route path='purchases/non-pharmacy' element={<PurchaseNonPharmacyProducts />} />
-          <Route path='setup/categories' element={<Categories />} />
-          <Route path='setup/unit-types' element={<UnitTypes />} />
-          <Route path='setup/companies' element={<Companies />} />
-          <Route path='returns/customers' element={<CustomersReturns />} />
-          <Route path='returns/expires-or-damages' element={<ExpiresOrDamagesReturns />} />
-          <Route path='employees' element={<Employees />} />
-          <Route path='customers' element={<Customers />} />
-          <Route path='suppliers/lists' element={<SuppliersList />} />
-          <Route path='suppliers/payments' element={<SuppliersPayments />} />
-          <Route path='suppliers/documents' element={<SuppliersDocuments />} />
-        </Route>
-        <Route path="*" element={<NotFound />} />
-       
-       </>
-      }
+        {(userRole || oldUser) && 
+          <>
+            <Route path="features" element={<Features />} />
+            <Route path="customer-stories" element={<CustomerStories />} />
+            <Route path="find-experts" element={<FindExperts />} />
+            <Route path="forgot-password" element={<ForgotPassword />} />
+            <Route path="register" element={<Register />} />
+            <Route path="integration" element={<Integrations />} />
+            <Route path="/" element={<Login />} />
+            <Route path="pricing" element={<Pricing />} />
+            <Route path="terms-and-conditions" element={<TermsAndConditions />} />
+            <Route path="privacy-policy" element={<PrivacyPolicy />} />
+            <Route path="resources" element={<Resources />} />
+            <Route path="about" element={<About />} />
+            <Route path="contact" element={<Contact />} />
+            <Route path="profile" element={<Profile />} />
+            <Route path="settings" element={<Settings />} />
+            <Route path="dashboard" element={<Dashboard />}>
+              <Route index element={<DashboardSummary />} />
+              <Route path='products/pharmacy' element={<PharmacyProducts />} />
+              <Route path='products/non-pharmacy' element={<Moviments />} />
+              <Route path='requested-items/pharmacy' element={<PharmacyItems />} />
+              <Route path='requested-items/non-pharmacy' element={<NonPharmacyItems />} />
+              <Route path='orders/pharmacy' element={<PharmacyOrders />} />
+              <Route path='orders/non-pharmacy' element={<NonPharmacyOrders />} />
+              <Route path='purchases/pharmacy' element={<PurchasePharmacyProducts />} />
+              <Route path='purchases/non-pharmacy' element={<PurchaseNonPharmacyProducts />} />
+              <Route path='setup/categories' element={<Categories />} />
+              <Route path='setup/unit-types' element={<UnitTypes />} />
+              <Route path='setup/companies' element={<Companies />} />
+              <Route path='returns/customers' element={<CustomersReturns />} />
+              <Route path='returns/expires-or-damages' element={<ExpiresOrDamagesReturns />} />
+              <Route path='employees' element={<Employees />} />
+              <Route path='customers' element={<Customers />} />
+              <Route path='suppliers/lists' element={<SuppliersList />} />
+              <Route path='suppliers/payments' element={<SuppliersPayments />} />
+              <Route path='suppliers/documents' element={<SuppliersDocuments />} />
+            </Route>
+            <Route path="*" element={<NotFound />} />
+          </>
+        }
       </Routes>
       <ToastContainer
         position="top-right"
