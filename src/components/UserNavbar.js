@@ -1,21 +1,19 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import logo from '../Assets/logo.png';
 import { RiSettings5Fill, RiProfileLine, RiLogoutBoxRFill, RiProductHuntFill, RiProfileFill, RiShoppingCartFill, RiFileDamageFill, RiAdminFill } from 'react-icons/ri';
 import { MdLocalPharmacy, MdSpaceDashboard } from 'react-icons/md';
-import { BiCategory, BiGitPullRequest, BiUnite } from 'react-icons/bi';
-import { AiFillCopyrightCircle, AiFillCreditCard, AiFillSetting } from 'react-icons/ai';
-import { TbTruckDelivery, TbTruckReturn } from 'react-icons/tb';
-import { FaThList, FaUser, FaUsers, FaRegFolder } from 'react-icons/fa';
 import { BiMenuAltRight } from 'react-icons/bi';
-import { BsCreditCard2BackFill } from 'react-icons/bs';
-import { HiDocumentText } from 'react-icons/hi';
 import DetailsComponent from './navbar/DetailsComponent';
 import LinkComponents from './navbar/LinkComponents';
 import UserLinkComponents from './navbar/UserLinkComponents';
 import user from '../Assets/user.png'
 import { Link } from 'react-router-dom';
+import { useAuth } from '../hooks/useAuth';
 
 const UserNavbar = () => {
+    const {role} = useAuth();
+
+
     return (
         
         <div className="navbar bg-white fixed top-0 left-0 right-0 z-50 shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)]">
@@ -63,9 +61,9 @@ const UserNavbar = () => {
                         <BiMenuAltRight className='text-2xl font-bold' />
                     </label>
                     <ul tabIndex="0" className="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52">
-                        <LinkComponents to={''} icon={<MdSpaceDashboard className='text-lg' />} name={'Dashboard'} />
+                        {['superAdmin', 'stockLeader'].includes(role.role) && <LinkComponents to={''} icon={<MdSpaceDashboard className='text-lg' />} name={'Dashboard'} />}
 
-                        <DetailsComponent
+                        { ['superAdmin', 'apms', 'comercialLeader'].includes(role.role) && <DetailsComponent
                             icon={<RiProductHuntFill className='text-lg' />}
                             name={'Productos'}
                             subMenus={
@@ -83,7 +81,7 @@ const UserNavbar = () => {
                                         name={'Movimientos'} />
                                 ]
                             } />
-
+}
                         {/* <DetailsComponent
                             icon={<BiGitPullRequest className='text-lg' />}
                             name={'Requested Items'}

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
   BarChart,
   Bar,
@@ -21,6 +21,7 @@ import { visitsPerAPMPerDay } from "../../Services/Grafics/visitsPerAPMPerDay";
 import { getAllVisitsWithComments } from "../../Services/Grafics/getAllVisitsWithComments";
 import { getRealAPMName } from "../../Services/getRealApmNames";
 import { getMonthInSpanish } from "../../Services/Grafics/getMonthInSpanish";
+import { filterVisitsByDateRange } from "../../Services/Grafics/filterVisitsByRange";
 
 function convertDateFormat(dateString) {
   const [year, month, day] = dateString.split('-');
@@ -29,6 +30,7 @@ function convertDateFormat(dateString) {
 
 const DashboardSummary = () => {
   const [infoUnfiltered, setInfoUnfiltered] = useState(null);
+  const [infoFiltered, setInfoFiltered] = useState(null);
   const [chartData, setChartData] = useState(null);
   const [comments, setComments] = useState(null);
   const [actualMonth, setActualMonth] = useState(null);
@@ -38,7 +40,7 @@ const DashboardSummary = () => {
   );
   const[visitsCardValue, setVisitsCardValue] = useState(null);
   const[visitsCardTitle, setVisitsCardTitle] = useState('Visitas en el més de')
-
+  const [visitsCardPorcentage, setVisitsCardPorcentage] = useState(null)
 
   window.addEventListener("load", () => {
     const leftBox = document.getElementById("left-box");
@@ -60,15 +62,18 @@ const DashboardSummary = () => {
     if (activeTooltipIndex >= 0) {
       if (title.includes("Visitas por APM")) {
         setChartData(
-          visitsPerApm(chartData[activeTooltipIndex].apm, infoUnfiltered)
+          visitsPerApm(chartData[activeTooltipIndex].apm, filterVisitsByDateRange(infoFiltered))
         );
-        setVisitsCardValue( visitsPerApm(chartData[activeTooltipIndex].apm, infoUnfiltered).reduce((acc, curr) => {
+        setVisitsCardValue( visitsPerApm(chartData[activeTooltipIndex].apm, filterVisitsByDateRange(infoFiltered)).reduce((acc, curr) => {
           return acc + curr.totalFarmacias + curr.totalMedico + curr.totalWhatsApp;
         }, 0))
+        
         setVisitsCardTitle(`Visitas totales de ${chartData[activeTooltipIndex].apm} en los últimos meses`)
+        setVisitsCardPorcentage(null)
+
         setActualApm(chartData[activeTooltipIndex].apm);
         setComments(
-          infoUnfiltered
+          filterVisitsByDateRange(infoFiltered)
             .filter((x) => x.APM === chartData[activeTooltipIndex].apm)
             .map((visit) => {
               return {
@@ -88,24 +93,40 @@ const DashboardSummary = () => {
       if (title.includes("en los últimos meses")) {
         setChartData(
           visitsPerAPMPerDay(
-            infoUnfiltered,
+            infoFiltered,
             chartData[activeTooltipIndex].apm,
             parseInt(chartData[activeTooltipIndex].fecha.split("/")[0])
           )
         );
-        setVisitsCardValue(  visitsPerAPMPerDay(
-          infoUnfiltered,
+        setVisitsCardValue(visitsPerAPMPerDay(
+          infoFiltered,
           chartData[activeTooltipIndex].apm,
           parseInt(chartData[activeTooltipIndex].fecha.split("/")[0])
         ).reduce((acc, curr) => {
           return acc + curr.totalFarmacias + curr.totalMedico + curr.totalWhatsApp;
         }, 0))
+
+
+        setVisitsCardPorcentage(Math.ceil(((visitsPerAPMPerDay(
+          infoFiltered,
+          chartData[activeTooltipIndex].apm,
+          parseInt(chartData[activeTooltipIndex].fecha.split("/")[0])
+        ).reduce((acc, curr) => {
+          return acc + curr.totalFarmacias + curr.totalMedico + curr.totalWhatsApp;
+        }, 0) *100) / visitsPerAPMPerDay(
+          infoFiltered,
+          chartData[activeTooltipIndex].apm,
+          parseInt(chartData[activeTooltipIndex].fecha.split("/")[0])-1
+        ).reduce((acc, curr) => {
+          return acc + curr.totalFarmacias + curr.totalMedico + curr.totalWhatsApp;
+        }, 0)))-100)
+        
         setVisitsCardTitle(`Visitas totales de ${chartData[activeTooltipIndex].apm} en ${getMonthInSpanish(chartData[activeTooltipIndex].fecha.split("/")[0] - 1)}`)
         setActualMonth(
           parseInt(chartData[activeTooltipIndex].fecha.split("/")[0])
         );
         setComments(
-          infoUnfiltered
+          infoFiltered
             .filter((x) => {
               const visitDate = new Date(x.FECHA);
               const chartDate = parseInt(
@@ -142,12 +163,19 @@ const DashboardSummary = () => {
           return { ...x, APM: getRealAPMName(x.APM) };
         });
         setActualMonth(new Date().getMonth());
-        setInfoUnfiltered(response);
+        setInfoFiltered(response)
         setChartData(visitsPerMonth(response, new Date().getMonth()));
         setComments(getAllVisitsWithComments(response));
         setVisitsCardValue(visitsPerMonth(response, new Date().getMonth()).reduce((acc, curr) => {
           return acc + curr.totalFarmacias + curr.totalMedico + curr.totalWhatsApp;
         }, 0))
+
+
+        setVisitsCardPorcentage(Math.ceil(((visitsPerMonth(response, new Date().getMonth()).reduce((acc, curr) => {
+          return acc + curr.totalFarmacias + curr.totalMedico + curr.totalWhatsApp;
+        }, 0) *100) / visitsPerMonth(response, new Date().getMonth()-1).reduce((acc, curr) => {
+          return acc + curr.totalFarmacias + curr.totalMedico + curr.totalWhatsApp;
+        }, 0)))-100)
         setVisitsCardTitle(`Visitas totales en el més de ${getMonthInSpanish(new Date().getMonth())}`)
 
       })
@@ -157,13 +185,18 @@ const DashboardSummary = () => {
   }, []);
 
   const handleZoomOut =()=>{
-    setChartData(visitsPerMonth(infoUnfiltered, new Date().getMonth()));
-    setVisitsCardValue(visitsPerMonth(infoUnfiltered, new Date().getMonth()).reduce((acc, curr) => {
+    setChartData(visitsPerMonth(infoFiltered, new Date().getMonth()));
+    setVisitsCardValue(visitsPerMonth(infoFiltered, new Date().getMonth()).reduce((acc, curr) => {
       return acc + curr.totalFarmacias + curr.totalMedico + curr.totalWhatsApp;
-    }, 0))       
+    }, 0))
+    setVisitsCardPorcentage(Math.ceil(((visitsPerMonth(infoFiltered, new Date().getMonth()).reduce((acc, curr) => {
+      return acc + curr.totalFarmacias + curr.totalMedico + curr.totalWhatsApp;
+    }, 0) *100) / visitsPerMonth(infoFiltered, new Date().getMonth()-1).reduce((acc, curr) => {
+      return acc + curr.totalFarmacias + curr.totalMedico + curr.totalWhatsApp;
+    }, 0)))-100)       
      setVisitsCardTitle(`Visitas totales en el més de ${getMonthInSpanish(new Date().getMonth())}`)
 
-    setComments(getAllVisitsWithComments(infoUnfiltered));
+    setComments(getAllVisitsWithComments(infoFiltered));
     setActualMonth(new Date().getMonth());
     setTitle( `Visitas por APM - ${getMonthInSpanish(new Date().getMonth())} 2024`)
 
@@ -173,10 +206,15 @@ const DashboardSummary = () => {
     if (actualMonth > new Date().getMonth() - 2) {
       const month = actualMonth - 1; // Ajusta para obtener el mes anterior
       if (title.includes("Visitas por APM")) {
-        setChartData(visitsPerMonth(infoUnfiltered, month));
-        setVisitsCardValue(visitsPerMonth(infoUnfiltered, month).reduce((acc, curr) => {
+        setChartData(visitsPerMonth(infoFiltered, month));
+        setVisitsCardValue(visitsPerMonth(infoFiltered, month).reduce((acc, curr) => {
           return acc + curr.totalFarmacias + curr.totalMedico + curr.totalWhatsApp;
         }, 0))
+        setVisitsCardPorcentage(Math.ceil(((visitsPerMonth(infoFiltered, month).reduce((acc, curr) => {
+          return acc + curr.totalFarmacias + curr.totalMedico + curr.totalWhatsApp;
+        }, 0) *100) / visitsPerMonth(infoFiltered, month-1).reduce((acc, curr) => {
+          return acc + curr.totalFarmacias + curr.totalMedico + curr.totalWhatsApp;
+        }, 0)))-100)
         setTitle(`Visitas por APM - ${getMonthInSpanish(month)} 2024`);
         setVisitsCardTitle(`Visitas por APM en el mes de ${getMonthInSpanish(month)}`)
         setActualMonth(month);
@@ -186,14 +224,19 @@ const DashboardSummary = () => {
         title.includes("Visitas de") &&
         !title.includes("en los últimos meses")
       ) {
-        setChartData(visitsPerAPMPerDay(infoUnfiltered, actualApm, month + 1));
-        setVisitsCardValue(visitsPerAPMPerDay(infoUnfiltered, actualApm, month + 1).reduce((acc, curr) => {
+        setChartData(visitsPerAPMPerDay(infoFiltered, actualApm, month + 1));
+        setVisitsCardValue(visitsPerAPMPerDay(infoFiltered, actualApm, month + 1).reduce((acc, curr) => {
           return acc + curr.totalFarmacias + curr.totalMedico + curr.totalWhatsApp;
         }, 0))
+        setVisitsCardPorcentage(Math.ceil(((visitsPerAPMPerDay(infoFiltered, actualApm, month + 1).reduce((acc, curr) => {
+          return acc + curr.totalFarmacias + curr.totalMedico + curr.totalWhatsApp;
+        }, 0) *100) / visitsPerAPMPerDay(infoFiltered, actualApm, month).reduce((acc, curr) => {
+          return acc + curr.totalFarmacias + curr.totalMedico + curr.totalWhatsApp;
+        }, 0)))-100)
         setVisitsCardTitle(`Visitas totales de ${actualApm} en ${getMonthInSpanish(month)}`)
 
         setComments(
-          infoUnfiltered
+          infoFiltered
             .filter((x) => {
               const visitDate = new Date(x.FECHA);
               return x.APM === actualApm && visitDate.getMonth() === month;
@@ -221,12 +264,18 @@ const DashboardSummary = () => {
     if (actualMonth < new Date().getMonth()) {
       const month = actualMonth + 1; // Ajusta para obtener el mes siguiente
       if (title.includes("Visitas por APM")) {
-        setChartData(visitsPerMonth(infoUnfiltered, month));
+        setChartData(visitsPerMonth(infoFiltered, month));
         setTitle(`Visitas por APM - ${getMonthInSpanish(month)} 2024`);
         setActualMonth(month);
-        setVisitsCardValue(visitsPerMonth(infoUnfiltered, month).reduce((acc, curr) => {
+        setVisitsCardValue(visitsPerMonth(infoFiltered, month).reduce((acc, curr) => {
           return acc + curr.totalFarmacias + curr.totalMedico + curr.totalWhatsApp;
         }, 0))
+      
+        setVisitsCardPorcentage(Math.ceil(((visitsPerMonth(infoFiltered, month).reduce((acc, curr) => {
+          return acc + curr.totalFarmacias + curr.totalMedico + curr.totalWhatsApp;
+        }, 0) *100) / visitsPerMonth(infoFiltered, month-1).reduce((acc, curr) => {
+          return acc + curr.totalFarmacias + curr.totalMedico + curr.totalWhatsApp;
+        }, 0)))-100)
         setVisitsCardTitle(`Visitas por APM en el mes de ${getMonthInSpanish(month)}`)
 
       }
@@ -235,9 +284,9 @@ const DashboardSummary = () => {
         title.includes("Visitas de") &&
         !title.includes("en los últimos meses")
       ) {
-        setChartData(visitsPerAPMPerDay(infoUnfiltered, actualApm, month + 1));
+        setChartData(visitsPerAPMPerDay(infoFiltered, actualApm, month + 1));
         setComments(
-          infoUnfiltered
+          infoFiltered
             .filter((x) => {
               const visitDate = new Date(x.FECHA);
               return x.APM === actualApm && visitDate.getMonth() === month;
@@ -257,9 +306,14 @@ const DashboardSummary = () => {
           `Visitas de ${actualApm} - ${month + 1}/${new Date().getFullYear()}`
         );
         setActualMonth(month);
-        setVisitsCardValue(visitsPerMonth(infoUnfiltered, month).reduce((acc, curr) => {
+        setVisitsCardValue(visitsPerAPMPerDay(infoFiltered, actualApm, month + 1).reduce((acc, curr) => {
           return acc + curr.totalFarmacias + curr.totalMedico + curr.totalWhatsApp;
         }, 0))
+        setVisitsCardPorcentage(Math.ceil(((visitsPerAPMPerDay(infoFiltered, actualApm, month + 1).reduce((acc, curr) => {
+          return acc + curr.totalFarmacias + curr.totalMedico + curr.totalWhatsApp;
+        }, 0) *100) / visitsPerAPMPerDay(infoFiltered, actualApm, month).reduce((acc, curr) => {
+          return acc + curr.totalFarmacias + curr.totalMedico + curr.totalWhatsApp;
+        }, 0)))-100)
         setVisitsCardTitle(`Visitas totales de ${actualApm} en ${getMonthInSpanish(month)}`)
       }
     }
@@ -273,9 +327,9 @@ const DashboardSummary = () => {
         <PrintButton />
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-4  gap-4 mb-4">
         <InfoCard
-          porcentaje={"20"}
+          porcentaje={visitsCardPorcentage}
           name={visitsCardTitle}
           status={visitsCardValue}
           icon={

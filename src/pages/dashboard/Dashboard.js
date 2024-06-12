@@ -12,7 +12,9 @@ import LinkComponents from '../../components/navbar/LinkComponents';
 import UserNavbar from '../../components/UserNavbar';
 import logo from '../../Assets/logo.png';
 import DetailsComponent from '../../components/navbar/DetailsComponent';
+import { useAuth } from '../../hooks/useAuth';
 const Dashboard = () => {
+    const {role} = useAuth()
     return (
         <div className="drawer drawer-mobile">
             <input id="dashboard" className="drawer-toggle" />
@@ -30,9 +32,9 @@ const Dashboard = () => {
                         
                         </Link>
 
-                        <LinkComponents to={''} icon={<MdSpaceDashboard className='text-lg' />} name={'Dashboard'} />
+                        {['superAdmin', 'stockLeader'].includes(role.role) && <LinkComponents to={''} icon={<MdSpaceDashboard className='text-lg' />} name={'Dashboard'} />}
 
-                        <DetailsComponent
+                       {['superAdmin', 'apms', 'comercialLeader'].includes(role.role) &&  <DetailsComponent
                             icon={<RiProductHuntFill className='text-lg' />}
                             name={'Productos'}
                             subMenus={
@@ -47,7 +49,7 @@ const Dashboard = () => {
                                         icon={<RiProfileFill className='text-lg' />}
                                         name={'Movimientos'} />
                                 ]
-                            } />
+                            } />}
 
                         {/* <DetailsComponent
                             icon={<BiGitPullRequest className='text-lg' />}

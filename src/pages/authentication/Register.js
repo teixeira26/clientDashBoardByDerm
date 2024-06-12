@@ -38,7 +38,7 @@ const Register = () => {
             <section className="relative flex flex-wrap lg:h-screen lg:items-center">
                 <div className="w-full px-4 py-12 lg:w-1/2 sm:px-6 lg:px-8 sm:py-16 lg:py-24">
                     <div className="max-w-lg mx-auto text-center">
-                        <h1 className="text-2xl font-bold sm:text-3xl">Creá tu cuenta en DermaSync</h1>
+                        <h1 className="text-2xl font-bold sm:text-3xl">Creá tu cuenta en el Sistema Operativo de By Derm</h1>
 
                         <p className="mt-4 text-gray-500">
                         Regístrate hoy y desbloquea una solución inteligente de gestión de inventarios, siente el poder de la automatización y más.                        </p>

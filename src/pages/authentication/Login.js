@@ -7,7 +7,7 @@ import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } f
 import { auth } from "../../firebase.config";
 import { getUserRole } from "../../Services/Users/getUserRole";
 
-const Login = ({ setUserRole, popo }) => {
+const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -19,8 +19,7 @@ const Login = ({ setUserRole, popo }) => {
         const user = userCredential.user;
         localStorage.setItem('user', JSON.stringify(user))
         const role = await getUserRole(user.uid);
-        console.log(role, setUserRole, popo)
-        setUserRole(role)
+        window.location.reload();
       })
       .catch((error) => {
         toast.error(error.message);
@@ -68,9 +67,6 @@ const Login = ({ setUserRole, popo }) => {
               Login
             </button>
           </div>
-          <div className="form-control mt-6">
-                        <p className='flex justify-between'>New to Inventory? <Link to='/register' className='text-[#E87722] underline'>Register Here</Link></p>
-                    </div>
         </form>
       </section>
       <Footer />
