@@ -59,6 +59,7 @@ function App() {
       console.log(role);
       if (role.role === roles.INITIAL) navigate('/dashboard');
       if (role.role === roles.STOCKLEADER) navigate('/dashboard/products/non-pharmacy');
+      if (role.role === roles.SUPERADMIN) navigate('/dashboard/products/non-pharmacy');
     }
    
     else if((!role)){

@@ -1,47 +1,53 @@
 function visitsPerMonth(visits, month) {
-    const result = [];
-    const currentYear = new Date().getFullYear();
-  
-    // Filtra las visitas por el mes y año actual
-    const filteredVisits = visits.filter(visit => {
-      const date = new Date(visit.FECHA);
-      return date.getMonth() === month && date.getFullYear() === currentYear;
-    });
-  
-    // Agrupa las visitas por APM
-    const groupedByAPM = filteredVisits.reduce((acc, visit) => {
-      const apm = visit.APM;
-  
-      if (!acc[apm]) {
-        acc[apm] = {
-          apm: apm,
-          totalMedico: 0,
-          totalFarmacias: 0,
-          totalWhatsApp: 0,
-        };
-      }
-      if(visit['TIPO DE VISITA'].toUpperCase() === 'WHATSAPP') acc[apm].totalWhatsApp += 1;
-      else if (visit['TIPO DE CONTACTO'].toUpperCase() === 'MEDICO') {
-        acc[apm].totalMedico += 1;
-      } else if (visit['TIPO DE CONTACTO'].toUpperCase() === 'FARMACIA') {
-        acc[apm].totalFarmacias += 1;
-      }
-  
-      return acc;
-    }, {});
-  
-    // Convertir el objeto agrupado en un array y agregar el campo fecha
-    for (const apm in groupedByAPM) {
-      result.push({
-        fecha: `${month}/${currentYear}`,
-        apm: groupedByAPM[apm].apm,
-        totalMedico: groupedByAPM[apm].totalMedico,
-        totalFarmacias: groupedByAPM[apm].totalFarmacias,
-        totalWhatsApp: groupedByAPM[apm].totalWhatsApp,
-      });
+  const result = [];
+  const currentYear = new Date().getFullYear();
+
+  // Filtra las visitas por el mes y año actual
+  const filteredVisits = visits.filter(visit => {
+    const date = new Date(visit.FECHA);
+    return date.getMonth() === month && date.getFullYear() === currentYear;
+  });
+
+  // Agrupa las visitas por APM
+  const groupedByAPM = filteredVisits.reduce((acc, visit) => {
+    const apm = visit.APM;
+
+    if (!acc[apm]) {
+      acc[apm] = {
+        apm: apm,
+        totalMedico: 0,
+        totalFarmacias: 0,
+        totalWhatsApp: 0,
+      };
     }
-  
-    return result;
+    if (visit['TIPO DE VISITA'].toUpperCase() === 'WHATSAPP') acc[apm].totalWhatsApp += 1;
+    else if (visit['TIPO DE CONTACTO'].toUpperCase() === 'MEDICO') {
+      acc[apm].totalMedico += 1;
+    } else if (visit['TIPO DE CONTACTO'].toUpperCase() === 'FARMACIA') {
+      acc[apm].totalFarmacias += 1;
+    }
+
+    return acc;
+  }, {});
+
+  // Convertir el objeto agrupado en un array y agregar el campo fecha
+  for (const apm in groupedByAPM) {
+    const apmData = groupedByAPM[apm];
+    const totalVisits = apmData.totalMedico + apmData.totalFarmacias + apmData.totalWhatsApp;
+    result.push({
+      fecha: `${month + 1}/${currentYear}`, // +1 para que el mes sea en formato humano (1-12)
+      apm: apmData.apm,
+      totalMedico: apmData.totalMedico,
+      totalFarmacias: apmData.totalFarmacias,
+      totalWhatsApp: apmData.totalWhatsApp,
+      sum: totalVisits,
+    });
   }
-  
-export default visitsPerMonth
+
+  // Ordenar el array por totalVisits (de mayor a menor)
+  result.sort((a, b) => b.sum - a.sum);
+
+  return result;
+}
+
+export default visitsPerMonth;
