@@ -633,7 +633,7 @@ const DashboardSummary = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
         <div
-          className="w-[180%] md:w-full aspect-[12/20] md:aspect-[16/8] rounded-[4px] flex justify-start gap-2 flex-col shadow pb-5 col-span-2 "
+          className="w-[180%] md:w-full aspect-[20/20] md:aspect-[16/8] rounded-[4px] flex justify-start gap-2 flex-col shadow pb-5 col-span-2 "
           id="left-box"
         >
           <div className="flex justify-between items-center pt-6">
