@@ -633,7 +633,7 @@ const DashboardSummary = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
         <div
-          className="w-[180%] md:w-full aspect-[16/20] md:aspect-[16/8] rounded-[4px] flex justify-start gap-2 flex-col shadow pb-5 col-span-2 "
+          className="w-[180%] md:w-full aspect-[12/20] md:aspect-[16/8] rounded-[4px] flex justify-start gap-2 flex-col shadow pb-5 col-span-2 "
           id="left-box"
         >
           <div className="flex justify-between items-center pt-6">
@@ -736,13 +736,13 @@ const DashboardSummary = () => {
                 top: 0,
                 right: 30,
                 left: -10,
-                bottom: 55,
+                bottom: 75,
               }}
             >
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis
                 dataKey="name"
-                fontSize={"12px"}
+                fontSize={"16px"}
                 angle={-45}
                 interval={0}
                 textAnchor="end"
