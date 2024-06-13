@@ -15,7 +15,6 @@ import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
 
 
-import PrintButton from "../../components/Buttons/PrintButton";
 import RefreshButton from "../../components/Buttons/RefreshButton";
 import InfoCard from "../../components/InfoCard";
 import { BACKEND_URL } from "../../constants/constants";
@@ -540,7 +539,6 @@ const DashboardSummary = () => {
     <div className="p-4 mt-16">
       <div className="flex justify-between mb-6">
         <RefreshButton />
-        <PrintButton />
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-4  gap-4 mb-4">
