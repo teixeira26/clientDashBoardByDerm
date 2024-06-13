@@ -1,4 +1,5 @@
 import React from "react";
+import Skeleton from "react-loading-skeleton";
 
 const InfoCard = ({ extraClass, name, status, icon, porcentaje, desktop, responsive }) => {
   return (
@@ -9,8 +10,14 @@ const InfoCard = ({ extraClass, name, status, icon, porcentaje, desktop, respons
         <p className="tracking-tight text-sm font-medium">{name}</p>
         {icon}
       </div>
-      <h3 className="text-2xl font-bold px-6 ">{status}</h3>
-      {porcentaje && <p className="text-xs text-muted-foreground px-6 mt-1 ">{porcentaje}%</p>}
+      {status ? <h3 className="text-2xl font-bold px-6 ">{status}</h3> : 
+      <div className="w-16 h-8 mx-6">
+<Skeleton width={'100%'} height={'100%'} ></Skeleton>
+      </div>
+      }
+      { status ? porcentaje && <p className="text-xs text-muted-foreground px-6 mt-1 ">{porcentaje}%</p> : <div className="w-8 h-4 mt-2 mx-6">
+<Skeleton width={'100%'} height={'100%'}></Skeleton>
+      </div>}
     </div>
   );
 };

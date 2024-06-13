@@ -11,6 +11,9 @@ import {
   ResponsiveContainer,
   LabelList,
 } from "recharts";
+import Skeleton from 'react-loading-skeleton'
+import 'react-loading-skeleton/dist/skeleton.css'
+
 
 import PrintButton from "../../components/Buttons/PrintButton";
 import RefreshButton from "../../components/Buttons/RefreshButton";
@@ -631,42 +634,22 @@ const DashboardSummary = () => {
         />
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8 w-full ">
+        <div className="w-full overflow-x-scroll md:overflow-hidden col-span-2 shadow">
+
         <div
-          className="w-[180%] md:w-full aspect-[20/20] md:aspect-[16/8] rounded-[4px] flex justify-start gap-2 flex-col shadow pb-5 col-span-2 "
+          className="w-[180%] md:w-full aspect-[20/20] md:aspect-[16/8] rounded-[4px] flex justify-start gap-2 flex-col pb-5  "
           id="left-box"
         >
-          <div className="flex justify-between items-center pt-6">
+          <div className="flex justify-between items-center pt-6 w-full">
             <div className="flex">
-              <p className="font-semibold leading-none tracking-tight px-6 pb-2">
+              <p className="font-semibold leading-none max-w-[250px] tracking-tight px-6">
                 {title}
               </p>
-              {!title.includes("Visitas por APM") && (
-                <div
-                  className="hover:bg-[#00000025] cursor-pointer"
-                  onClick={() => handleZoomOut()}
-                  title="Zoom out"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="32px"
-                    height="32px"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                  >
-                    <path
-                      d="M15 4V7C15 8.10457 15.8954 9 17 9H20M9 4V7C9 8.10457 8.10457 9 7 9H4M15 20V17C15 15.8954 15.8954 15 17 15H20M9 20V17C9 15.8954 8.10457 15 7 15H4"
-                      stroke="#000000"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    />
-                  </svg>
-                </div>
-              )}
+             
             </div>
 
-            <div className="flex">
+            <div className="flex absolute right-2 md:relative">
               <div
                 className="hover:bg-[#00000025] mr-6 cursor-pointer"
                 onClick={() => handlePreviousMonthClick()}
@@ -707,9 +690,9 @@ const DashboardSummary = () => {
               </div>
             </div>
           </div>
-
+          
           {
-            chartData && chartData.length > 0 && 
+            (chartData && chartData.length > 0 )?
             <ResponsiveContainer width="100%" height="78%">
             <BarChart
               onClick={handleClick}
@@ -829,19 +812,50 @@ const DashboardSummary = () => {
                   )}
               </Bar>
             </BarChart>
-          </ResponsiveContainer>}
+          </ResponsiveContainer>:
+          
+          <div className="m-4">
+            <Skeleton width={'100%'} height={'60vh'}></Skeleton>
+          </div>
+          }
+          
         </div>
+        {!title.includes("Visitas por APM") && (
+                <div
+                  className="hover:bg-[#00000025] cursor-pointer absolute left-8 translate-y-[-64px] "
+                  onClick={() => handleZoomOut()}
+                  title="Zoom out"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="32px"
+                    height="32px"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                  >
+                    <path
+                      d="M15 4V7C15 8.10457 15.8954 9 17 9H20M9 4V7C9 8.10457 8.10457 9 7 9H4M15 20V17C15 15.8954 15.8954 15 17 15H20M9 20V17C9 15.8954 8.10457 15 7 15H4"
+                      stroke="#000000"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </div>
+              )}
+        </div>
+       
 
         <div
-          className=" overflow-y-scroll rounded-[4px] flex justify-start gap-2 flex-col shadow pb-5 "
+          className=" overflow-y-scroll w-full rounded-[4px] max-h-[60vh] flex justify-start gap-2 flex-col shadow pb-5 "
           id="right-box"
         >
           <p className="font-semibold leading-none tracking-tight px-6 pt-6 pb-6">
             Ultimos comentarios realizados
           </p>
           <hr />
-          {comments && (
-            <div className="px-6 ">
+          {comments ? (
+            <div className="px-6">
               {comments.map((x, index) => {
                 return (
                   <div className="" key={index}>
@@ -872,7 +886,12 @@ const DashboardSummary = () => {
                 );
               })}
             </div>
-          )}
+          ) :
+          <div className="px-4 w-100% pb-4">
+          <Skeleton width={'100%'} height={'60vh'}></Skeleton>
+
+          </div>
+          }
         </div>
       </div>
     </div>
