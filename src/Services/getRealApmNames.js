@@ -4,11 +4,17 @@ export const getRealAPMName = (name) => {
       return "Alejandro Levy";
     case "BAHIABLANC":
       return "Diego Hechtlingler";
+    case "DIEGO HETCHLINGER":
+      return "Diego Hechtlingler";
     case "CORDOBA":
       return "Viviana Sosa";
     case "CORRIENTES":
       return "Mariano Agazzani";
+    case "MARIANO":
+      return "Mariano Agazzani";
     case "ENTRE RIOS":
+      return "Luis Bonfils";
+    case "LUIS BONFILS":
       return "Luis Bonfils";
     case "GBA.NORTE":
       return "Tomás";
@@ -29,6 +35,11 @@ export const getRealAPMName = (name) => {
     case "NEUQUEN":
       return "Marcelo Gonzalez";
     case "ROSARIO":
+    case "MARCELO GONZALEZ":
+      return "Marcelo Gonzalez";
+    case "ROSARIO":
+      return "Giuliano Radica";
+    case "Giuliano":
       return "Giuliano Radica";
     case "Rosario2":
       return "Giuliano Radica";
@@ -40,6 +51,8 @@ export const getRealAPMName = (name) => {
       return "Alejandro Levy";
     case "TUCUMAN2":
       return "Alejandro Levy";
+    case "TUCUMAN.ALE":
+      return "Alejandro Levy";
     case "TUCUMAN3":
       return "Lourdes Muñoz";
     case "TUCUMANGAB":
@@ -47,6 +60,8 @@ export const getRealAPMName = (name) => {
     case "USHUAIA":
       return "Maria Wohanka";
     case "CABA.CENTR":
+      return "Franco Piccapietra";
+    case "PICCA":
       return "Franco Piccapietra";
     case "w.mariavis":
       return "Maria Wohanka";
