@@ -28,7 +28,7 @@ export default function RecipesGraphic() {
             id="left-box"
           >
             <div
-              className="w-[180%] md:w-full rounded-[4px] flex justify-start gap-2 flex-col pb-5  "
+              className="md:w-full rounded-[4px] flex justify-start gap-2 flex-col pb-5  "
               id="left-box"
             >
               <div className="flex items-center justify-between pt-6">
@@ -103,7 +103,7 @@ export default function RecipesGraphic() {
           </div>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 ">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <RecipesList title={`Recetas x Farmacias en el mes de ${getMonthInSpanish(actualMonth)}`} list={pharmacysItem.map(x=>({...x, item:x.farmacia }))} />
           <RecipesList title={`Recetas x Medicos en el mes de ${getMonthInSpanish(actualMonth)}`} list={doctorsItem.map(x=>({...x, item:x.doctor }))} />
         </div>

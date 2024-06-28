@@ -15,7 +15,7 @@ const InfoCard = ({ extraClass, name, status, icon, porcentaje, desktop, respons
 <Skeleton width={'100%'} height={'100%'} ></Skeleton>
       </div>
       }
-      { status ? (porcentaje || porcentaje === 0) && <p className={`text-xs text-muted-foreground px-6 mt-1 font-semibold ${(porcentaje && porcentaje >= 0 )? 'text-green-500': 'text-red-500'}`}>{porcentaje > 0 ? `${porcentaje}%`: '-'}</p> : <div className="w-8 h-4 mt-2 mx-6">
+      { status ? (porcentaje || porcentaje === 0) && <p className={`text-xs text-muted-foreground px-6 mt-1 font-semibold ${(porcentaje && porcentaje >= 0 )? 'text-green-500': 'text-red-500'}`}>{porcentaje > 0 ? `+${porcentaje}%`:porcentaje < 0 ? `${porcentaje}%` : '-'}</p> : <div className="w-8 h-4 mt-2 mx-6">
 <Skeleton width={'100%'} height={'100%'}></Skeleton>
       </div>}
     </div>

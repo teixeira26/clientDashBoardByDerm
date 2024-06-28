@@ -244,7 +244,7 @@ export default function VisitsGraphic() {
       </div>
 
       <div
-        className=" overflow-y-scroll w-full rounded-[4px] max-h-[60vh] flex justify-start gap-2 flex-col shadow pb-5 "
+        className=" overflow-y-scroll w-full rounded-[4px] max-h-[60vh] flex justify-start gap-2 flex-col shadow pb-5 styledScrollBar "
         id="right-box"
       >
         <p className="font-semibold leading-none tracking-tight px-6 pt-6 pb-6">

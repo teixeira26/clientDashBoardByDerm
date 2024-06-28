@@ -6,7 +6,7 @@ export default function RecipesList({title, list}) {
     const {setDashboardStep} = useContext(recipesGraphicContext)
   return (
     <div
-    className=" overflow-y-scroll w-full rounded-[4px] max-h-[60vh] flex justify-start gap-2 flex-col shadow pb-5 "
+    className=" overflow-y-scroll w-full rounded-[4px] max-h-[60vh] flex justify-start gap-2 flex-col shadow pb-5 styledScrollBar"
     id="right-box"
   >
     <div className='flex justify-between items-center pr-4'>

@@ -34,7 +34,7 @@ export default function RecipeBarMobile({handleClick, chartData, previousClick})
                       top: 0,
                       right: 30,
                       left: -10,
-                      bottom: 75,
+                      bottom: 95,
                     }}
                   >
                     <CartesianGrid strokeDasharray="3 3" />
@@ -51,7 +51,7 @@ export default function RecipeBarMobile({handleClick, chartData, previousClick})
                       verticalAlign="top"
                       wrapperStyle={{
                         textAlign: "center", // Centrar horizontalmente
-                        marginTop: "10px",
+                        marginTop: "-10px",
                         position: "relative",
                         width: "100%", // Asegurar que ocupa todo el ancho
                       }}
