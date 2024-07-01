@@ -30,7 +30,7 @@ export default function VisitsGraphic() {
     handleNextMonthClick,
     handlePreviousMonthClick,
   } = useContext(visitsGraphicContext);
-
+  console.log(chartData)
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8 w-full ">
       <div className="w-full overflow-x-scroll md:overflow-hidden col-span-2 shadow">

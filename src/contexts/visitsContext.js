@@ -35,6 +35,7 @@ export const visitsGraphicContext = createContext();
             setActualMonth(new Date().getMonth());
             setInfoFiltered(response);
             setChartData(visitsPerMonth(response, new Date().getMonth()));
+            console.log(visitsPerMonth(response, new Date().getMonth()))
             setComments(getAllVisitsWithComments(response));
             setVisitsCardValue(
               visitsPerMonth(response, new Date().getMonth()).reduce(

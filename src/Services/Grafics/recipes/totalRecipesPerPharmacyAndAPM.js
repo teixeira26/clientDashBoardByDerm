@@ -25,7 +25,7 @@ const totalRecetasPorFarmaciaYAPM = (recipes, apmCarga, month) => {
           resultPreviousMonth[farmacia] = 0;
         }
     
-        resultPreviousMonth[farmacia] += 1;
+        resultPreviousMonth[farmacia] += cantidad;
       });
 
     filteredRecipes.forEach(recipe => {
@@ -36,7 +36,7 @@ const totalRecetasPorFarmaciaYAPM = (recipes, apmCarga, month) => {
         result[farmacia] = 0;
       }
   
-      result[farmacia] += 1;
+      result[farmacia] += cantidad;
     });
     console.log(resultPreviousMonth, result)
 

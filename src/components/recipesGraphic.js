@@ -18,7 +18,6 @@ export default function RecipesGraphic() {
     actualMonth, 
     doctorsItem,
   } = useContext(recipesGraphicContext);
-  console.log(pharmacysItem)
   return (
     <>
       {dashboardStep === 0 ? (
@@ -95,7 +94,7 @@ export default function RecipesGraphic() {
                   />
                 </>
               </div>
-            ) : (
+            ) : chartData.length === 0 ? 'Sin datos' : (
               <div className="mb-4 ">
                 <Skeleton width={"100%"} height={"60vh"}></Skeleton>
               </div>

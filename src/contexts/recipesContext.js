@@ -36,6 +36,7 @@ const RecipesGraphicProvider = ({ children }) => {
           actualMonth + 1
         ).reduce((x, y) => x + y.totalCantidad, 0);
         setRecipeCardValue(total);
+        console.log(total, 'totaaal')
         setRecipeCardPorcentaje(
           Math.ceil(
             (total * 100) /

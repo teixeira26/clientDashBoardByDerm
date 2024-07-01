@@ -10,6 +10,7 @@ const recipesPerAPMandPerMonth = (recipes, month)=>{
 
   const groupedByAPMCarga = filteredRecipes.reduce((acc, recipe) => {
     const apmCarga = recipe['APM CARGA'];
+    const cantidad = Number(recipe.CANTIDAD);
 
     if (!acc[apmCarga]) {
       acc[apmCarga] = {
@@ -18,7 +19,7 @@ const recipesPerAPMandPerMonth = (recipes, month)=>{
       };
     }
 
-    acc[apmCarga].totalCantidad += 1;
+    acc[apmCarga].totalCantidad += cantidad;
 
     return acc;
   }, {});
@@ -34,7 +35,7 @@ const recipesPerAPMandPerMonth = (recipes, month)=>{
   result.sort((a, b) => b.totalCantidad - a.totalCantidad);
 
   return result;
-  
+
 }
 
 export default recipesPerAPMandPerMonth

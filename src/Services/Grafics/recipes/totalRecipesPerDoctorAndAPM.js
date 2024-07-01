@@ -25,7 +25,7 @@ const totalRecipesPerDoctorAndAPM = (recipes, apmCarga, month) => {
           resultPreviousMonth[doctor] = 0;
         }
     
-        resultPreviousMonth[doctor] += 1;
+        resultPreviousMonth[doctor] += cantidad;
       });
 
     filteredRecipes.forEach(recipe => {
@@ -36,7 +36,7 @@ const totalRecipesPerDoctorAndAPM = (recipes, apmCarga, month) => {
         result[doctor] = 0;
       }
   
-      result[doctor] += 1;
+      result[doctor] += cantidad;
     });
     console.log(resultPreviousMonth, result)
 
