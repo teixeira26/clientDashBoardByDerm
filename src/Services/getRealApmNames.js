@@ -36,7 +36,6 @@ export const getRealAPMName = (name) => {
       return "Leandro Fusco";
     case "NEUQUEN":
       return "Marcelo Gonzalez";
-    case "ROSARIO":
     case "MARCELO GONZALEZ":
       return "Marcelo Gonzalez";
     case "ROSARIO":
