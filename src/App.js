@@ -65,7 +65,7 @@ function App() {
     }
    
     else if((!role)){
-      navigate('/register');
+      navigate('/login');
     }
   }, [role]);
 
