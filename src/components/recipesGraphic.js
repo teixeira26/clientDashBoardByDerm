@@ -5,6 +5,7 @@ import RecipeBarDesktop from "./molecules/recipeBarDesktop";
 import RecipeBarMobile from "./molecules/recipeBarMobile";
 import RecipesList from "./molecules/recipesList";
 import { getMonthInSpanish } from "../Services/Grafics/getMonthInSpanish";
+import NoData from "./noData";
 
 export default function RecipesGraphic() {
   const {
@@ -94,7 +95,9 @@ export default function RecipesGraphic() {
                   />
                 </>
               </div>
-            ) : chartData.length === 0 ? 'Sin datos' : (
+            ) : chartData.length === 0 ? 
+            <NoData/>
+            : (
               <div className="mb-4 ">
                 <Skeleton width={"100%"} height={"60vh"}></Skeleton>
               </div>

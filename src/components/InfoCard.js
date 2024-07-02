@@ -2,7 +2,6 @@ import React from "react";
 import Skeleton from "react-loading-skeleton";
 
 const InfoCard = ({ extraClass, name, status, icon, porcentaje, desktop, responsive, onClick }) => {
-  console.log(status, 'asiashuasunsayuahsuahs')
   return (
     <div
       onClick={onClick} className={`${extraClass} rounded-[4px] cursor-pointer pb-6 border bg-card text-card-foreground shadow ${responsive &&  ' md:hidden' } ${desktop &&  'hidden md:block' }`}
