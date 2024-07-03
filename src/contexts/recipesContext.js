@@ -15,7 +15,7 @@ const RecipesGraphicProvider = ({ children }) => {
   const [actualMonth, setActualMonth] = useState(new Date().getMonth());
   const [recipeCardPorcentage, setRecipeCardPorcentaje] = useState();
   const [recipeCardTitle, setRecipeCardTitle] = useState(
-    `Recetas en el mes de ${getMonthInSpanish(new Date().getMonth())}`
+    `Productos Recetados en el mes de ${getMonthInSpanish(new Date().getMonth())}`
   );
   const [recipeCardValue, setRecipeCardValue] = useState(false);
   const [dashboardStep, setDashboardStep] = useState(0);
@@ -46,7 +46,7 @@ const RecipesGraphicProvider = ({ children }) => {
           ) - 100
         );
         setRecipeCardTitle(
-          `Recetas en el mes de ${getMonthInSpanish(actualMonth)}`
+          `Productos Recetados en el mes de ${getMonthInSpanish(actualMonth)}`
         );
       })
       .catch((err) => {
@@ -94,7 +94,7 @@ const RecipesGraphicProvider = ({ children }) => {
       )
     );
     setRecipeCardTitle(
-        `Recetas de ${chartData[activeTooltipIndex].apmCarga} el mes de ${getMonthInSpanish(actualMonth)}`
+        `Productos Recetados de ${chartData[activeTooltipIndex].apmCarga} el mes de ${getMonthInSpanish(actualMonth)}`
       );
     }
   

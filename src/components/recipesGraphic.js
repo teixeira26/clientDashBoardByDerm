@@ -106,8 +106,8 @@ export default function RecipesGraphic() {
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <RecipesList title={`Recetas x Farmacias en el mes de ${getMonthInSpanish(actualMonth)}`} list={pharmacysItem.map(x=>({...x, item:x.farmacia }))} />
-          <RecipesList title={`Recetas x Medicos en el mes de ${getMonthInSpanish(actualMonth)}`} list={doctorsItem.map(x=>({...x, item:x.doctor }))} />
+          <RecipesList title={`Productos Recetados x Farmacias en el mes de ${getMonthInSpanish(actualMonth)}`} list={pharmacysItem.map(x=>({...x, item:x.farmacia }))} />
+          <RecipesList title={`Productos Recetados x Medicos en el mes de ${getMonthInSpanish(actualMonth)}`} list={doctorsItem.map(x=>({...x, item:x.doctor }))} />
         </div>
       )}
     </>

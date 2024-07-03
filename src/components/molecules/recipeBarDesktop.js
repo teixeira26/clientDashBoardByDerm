@@ -25,7 +25,7 @@ export default function RecipeBarDesktop({handleClick, chartData, previousClick}
                       chartData && chartData.length > 0
                         ? chartData.map((x) => {
                             return {
-                              'Total de Recetas': x.totalCantidad,
+                              'Total de Productos Recetados': x.totalCantidad,
                               name: x.apmCarga,
                             };
                           })
@@ -59,12 +59,12 @@ export default function RecipeBarDesktop({handleClick, chartData, previousClick}
                     />
 
                     <Bar
-                      dataKey="Total de Recetas"
+                      dataKey="Total de Productos Recetados"
                       fill="#d46611"
                       activeBar={<Rectangle fill="pink" stroke="blue" />}
                     >
                       <LabelList
-                        dataKey="Total de Recetas"
+                        dataKey="Total de Productos Recetados"
                         position="top"
                         fontSize={"12px"}
                       />
