@@ -2,7 +2,8 @@ function visitsPerMonth(visits, month) {
   const result = [];
   const currentYear = new Date().getFullYear();
   // Filtra las visitas por el mes y año actual
-  const filteredVisits = visits.filter(visit => {
+
+ const filteredVisits = visits.filter(visit => {
     const [year, monthVisit, day] = visit.FECHA.split('-')
     const date = new Date(year, monthVisit-1, day);
     return date.getMonth() === month && date.getFullYear() === currentYear;
