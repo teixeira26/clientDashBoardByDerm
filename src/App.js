@@ -43,6 +43,8 @@ import { useEffect, useState } from 'react';
 import { roles } from './constants/roles.js';
 import { AuthProvider, useAuth } from './hooks/useAuth.js';
 import Loading from './components/Loading.js';
+import VisitsGraphicProvider from './contexts/visitsContext.js';
+import DashboardTemplate from './components/graficsFactory.template.js';
 
 function App() {
   const navigate = useNavigate();
@@ -69,7 +71,10 @@ function App() {
 
   if(isLoading) return <Loading/>
   return (
+
     <AuthProvider>
+
+
     <div className="App">
       <Routes>
         <Route path="register" element={<Register />} />
@@ -90,7 +95,7 @@ function App() {
           <Route path="profile" element={<Profile />} />
           <Route path="settings" element={<Settings />} />
           <Route path="dashboard" element={<Dashboard />}>
-            <Route index element={<DashboardSummary />} />
+            <Route index element={<DashboardTemplate />} />
             <Route path='products/pharmacy' element={<PharmacyProducts />} />
             <Route path='products/non-pharmacy' element={<Moviments />} />
             <Route path='requested-items/pharmacy' element={<PharmacyItems />} />
@@ -125,6 +130,7 @@ function App() {
       />
     </div>
   </AuthProvider>
+
   );
 }
 

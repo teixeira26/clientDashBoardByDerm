@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import { getMonthInSpanish } from "../Services/Grafics/getMonthInSpanish";
 import visitsPerMonth from "../Services/Grafics/visitsPerMonth";
 import { getAllVisitsWithComments } from "../Services/Grafics/getAllVisitsWithComments";
@@ -8,7 +8,9 @@ import { visitsPerAPMPerDay } from "../Services/Grafics/visitsPerAPMPerDay";
 import { BACKEND_URL } from "../constants/constants";
 import { getRealAPMName } from "../Services/getRealApmNames";
 
- const useVisitFunctions = ()=>{
+export const visitsGraphicContext = createContext();
+
+ const VisitsGraphicProvider = ({children})=>{
     const [infoFiltered, setInfoFiltered] = useState(null);
     const [chartData, setChartData] = useState(null);
     const [comments, setComments] = useState(null);
@@ -498,8 +500,8 @@ import { getRealAPMName } from "../Services/getRealApmNames";
         }
       };
 
-      return [
-        infoFiltered,
+      return ( <visitsGraphicContext.Provider value={{
+      infoFiltered,
         chartData,
         comments,
         actualMonth,
@@ -519,8 +521,12 @@ import { getRealAPMName } from "../Services/getRealApmNames";
         visitsCardPorcentage,
         visitsCardTitle,
         visitsCardValue
-    ]
+      }}>
+      {children}
+      </visitsGraphicContext.Provider>)
+        
+    
 }
 
 
-export default useVisitFunctions;
+export default VisitsGraphicProvider ;
