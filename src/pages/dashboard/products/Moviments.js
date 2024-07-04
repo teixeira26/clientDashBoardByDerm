@@ -202,7 +202,6 @@ const Moviments = () => {
               />
               <DatePicker
                 onchange={(e) => {
-                  console.log(e.target.value, typeof e.target.value);
                   setexpiration(e.target.value);
                 }}
                 title={"Fecha de Vencimiento"}

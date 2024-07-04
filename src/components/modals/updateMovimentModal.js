@@ -16,7 +16,6 @@ export default function UpdateMovimentModal({id}) {
     const updateMoviment = event => {
         event.preventDefault();
 
-        console.log({ typeOfMoviment, pharmacy, responsable, product, description, enterpryse, quantity, lot, expiration, referNumber })
         const productDetails = { date, typeOfMoviment, pharmacy, responsable, product, description, enterpryse, quantity: typeOfMoviment === "SALIDA" ? `-${quantity}` : quantity, lot, expiration, referNumber }       // send data to server
         fetch(`${BACKEND_URL}/moviments/update/${id}`, {
             method: 'POST',
@@ -52,7 +51,6 @@ export default function UpdateMovimentModal({id}) {
                            <Input onchange={(e)=>setpharmacy(e.target.value)} title={'Nombre de la farmacia'} type='text' placeholder='Del Pueblo' name='pharmacyName' isRequired='required' />
                            <Input onchange={(e)=>setreferNumber(e.target.value)} title={'Nº de remito (últimos 4 digitos)'}  type='number' name='category' placeholder='2501' isRequired='required' options={['ENTRADA', 'SALIDA']} />
                             <DatePicker onchange={(e)=>{
-                                console.log(e.target.value, typeof e.target.value)
                                 setexpiration(e.target.value)}} title={'Fecha de Vencimiento'} type='text' placeholder='dd/mm/aaaa' name='date' isRequired='required' />
                             <Input onchange={(e)=>setlot(e.target.value)}  title={'Lote'}  type='text' name='category' placeholder='P25' isRequired='required' options={['ENTRADA', 'SALIDA']} />
 

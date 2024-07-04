@@ -31,7 +31,6 @@ const Products = () => {
 
 
         const productDetails = { name: name.toUpperCase(), description, minimunQuantityOnStock, quantity: 0 };
-        console.log(productDetails)
 
         // send data to server
         fetch(`${BACKEND_URL}/products/add`, {

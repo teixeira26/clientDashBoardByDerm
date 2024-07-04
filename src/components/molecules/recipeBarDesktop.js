@@ -13,7 +13,6 @@ import {
   } from "recharts";
 
 export default function RecipeBarDesktop({handleClick, chartData, previousClick}) {
-    console.log(chartData)
   return (
     <div className="hidden md:block">
                 <ResponsiveContainer width={"100%"} aspect={16.0 / 5.0}>

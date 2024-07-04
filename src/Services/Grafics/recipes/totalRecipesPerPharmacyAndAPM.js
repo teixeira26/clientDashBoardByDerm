@@ -38,7 +38,6 @@ const totalRecetasPorFarmaciaYAPM = (recipes, apmCarga, month) => {
   
       result[farmacia] += cantidad;
     });
-    console.log(resultPreviousMonth, result)
 
    
     // Convertir el resultado en un array de objetos

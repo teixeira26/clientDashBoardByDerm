@@ -1,15 +1,11 @@
 export function visitsPerApm(apmName, visits) {
   // Filtrar las visitas por el APM proporcionado
   const filteredVisits = visits.filter(visit => visit.APM === apmName);
-
   // Array para almacenar las visitas agrupadas por mes
   const groupedVisits = [];
-
   // Iterar sobre las visitas filtradas
   filteredVisits.forEach(visit => {
-    const date = new Date(visit.FECHA);
-    const month = date.getMonth() + 1;
-    const year = date.getFullYear();
+    const [year, month] = visit.FECHA.split('-')
     const key = `${month}/${year}`;
 
     // Buscar si ya existe un objeto para este mes y año
@@ -33,11 +29,11 @@ export function visitsPerApm(apmName, visits) {
     }
   });
 
-  // Ordenar el array por fecha (de menor a mayor)
+  //Ordenar el array por fecha (de menor a mayor)
   groupedVisits.sort((a, b) => {
     const [monthA, yearA] = a.fecha.split('/').map(Number);
     const [monthB, yearB] = b.fecha.split('/').map(Number);
-    return yearA - yearB || monthA - monthB;
+    return yearB - yearA || monthB - monthA;
   });
 
   return groupedVisits;

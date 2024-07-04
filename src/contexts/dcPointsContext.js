@@ -37,9 +37,7 @@ const DcPointsGraphicProvider = ({ children }) => {
           response,
           actualMonth + 1
         ).reduce((x, y) => x + y.totalCantidad, 0);
-        console.log(dcPointsPerAPMandPerMonth(response, actualMonth))
         setDcPointsCardValue(total);
-        console.log(total, 'totaaal')
         setDcPointsCardPorcentaje(
           Math.ceil(
             (total * 100) /
