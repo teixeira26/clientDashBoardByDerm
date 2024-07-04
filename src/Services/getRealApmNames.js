@@ -10,6 +10,8 @@ export const getRealAPMName = (name) => {
       return "Viviana Sosa";
     case "CORRIENTES":
       return "Mariano Agazzani";
+    case "MARIANO AGAZZANI":
+      return "Mariano Agazzani";
     case "MARIANO":
       return "Mariano Agazzani";
     case "ENTRE RIOS":
@@ -20,7 +22,13 @@ export const getRealAPMName = (name) => {
       return "Tomás";
     case "nacho.dev":
       return "Ignacio Ganci";
+    case "#N/A":
+      return "Sin Asignar";
+    case "CABA":
+      return "Ignacio Ganci";
     case "GBA.OESTE":
+      return "Franco Piccapietra";
+    case "FRANCO PICCAPIETRA":
       return "Franco Piccapietra";
     case "GBA.SUR":
       return "Maria Wohanka";
@@ -44,6 +52,8 @@ export const getRealAPMName = (name) => {
       return "Giuliano Radica";
     case "Rosario2":
       return "Giuliano Radica";
+    case "GIULIANO RADICA":
+      return "Giuliano Radica";
     case "SALTA1":
       return "Alejandro Levy";
     case "SALTA/JUJUT":
@@ -51,6 +61,8 @@ export const getRealAPMName = (name) => {
     case "TUCUMAN.AL":
       return "Alejandro Levy";
     case "TUCUMAN1":
+      return "Alejandro Levy";
+    case "ALEJANDRO LEVY":
       return "Alejandro Levy";
     case "TUCUMAN2":
       return "Alejandro Levy";
