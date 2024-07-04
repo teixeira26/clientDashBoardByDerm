@@ -3,7 +3,6 @@ const totalDcPointsPorFarmaciaYAPM = (dcPoints, apmCarga, month) => {
     const resultPreviousMonth = {};
     const currentYear = new Date().getFullYear();
   
-    console.log(dcPoints, 'aijsiajsjij')
     // Filtrar las recetas por el APM CARGA especificado y el mes dado
     const filteredDcPoints = dcPoints.filter(dcPoint => {
       const [day, monthd, year] = dcPoint['VV+'].split('/');
@@ -42,7 +41,6 @@ const totalDcPointsPorFarmaciaYAPM = (dcPoints, apmCarga, month) => {
         result[farmacia] += cantidad;
       }
     });
-    console.log(resultPreviousMonth, result)
 
    
     // Convertir el resultado en un array de objetos

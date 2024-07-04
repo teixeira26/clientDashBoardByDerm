@@ -38,7 +38,6 @@ const totalRecipesPerDoctorAndAPM = (recipes, apmCarga, month) => {
   
       result[doctor] += cantidad;
     });
-    console.log(resultPreviousMonth, result)
 
    
     // Convertir el resultado en un array de objetos

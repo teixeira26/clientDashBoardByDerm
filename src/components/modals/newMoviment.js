@@ -29,7 +29,6 @@ export default function NewMoviment({products, createModalToggle}) {
   
     const handleChangeProduct = (option) => {
       setproduct(option);
-      console.log(option)
     };
   
     const handleClearProduct = () => {
@@ -39,7 +38,6 @@ export default function NewMoviment({products, createModalToggle}) {
 
     const addNewMoviment = (event) => {
         event.preventDefault();
-        console.log(product)
         const productDetails = {
           date,
           typeOfMoviment,
@@ -159,7 +157,6 @@ export default function NewMoviment({products, createModalToggle}) {
                   />
                   <Select
                     onchange={(e) => {
-                      console.log(e.target.value);
                       setTypeOfProduct(e.target.value);
                     }}
                     type="checkbox"
@@ -170,7 +167,6 @@ export default function NewMoviment({products, createModalToggle}) {
                     <>
                       <DatePicker
                         onchange={(e) => {
-                          console.log(e.target.value, typeof e.target.value);
                           setexpiration(e.target.value);
                         }}
                         title={"Fecha de Vencimiento"}
@@ -203,7 +199,6 @@ export default function NewMoviment({products, createModalToggle}) {
                   />
                   <Select
                     onchange={(e) => {
-                      console.log(e.target.value);
                       setTypeOfProduct(e.target.value);
                     }}
                     type="checkbox"
@@ -214,7 +209,6 @@ export default function NewMoviment({products, createModalToggle}) {
                     <>
                       <DatePicker
                         onchange={(e) => {
-                          console.log(e.target.value, typeof e.target.value);
                           setexpiration(e.target.value);
                         }}
                         title={"Fecha de Vencimiento"}

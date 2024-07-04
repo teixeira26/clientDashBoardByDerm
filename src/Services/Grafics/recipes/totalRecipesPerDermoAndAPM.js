@@ -37,7 +37,6 @@ const totalDcPointsPerDermoAndAPM = (dcPoints, apmCarga, month) => {
   
       result[dermo] += cantidad;
     });
-    console.log(resultPreviousMonth, result)
 
    
     // Convertir el resultado en un array de objetos

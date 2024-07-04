@@ -1,6 +1,4 @@
 const useAddToDB = (addApiLink, data) => {
-    console.log(addApiLink)
-    console.log(data)
     // send data to server
     fetch({ addApiLink }, {
         method: 'POST',

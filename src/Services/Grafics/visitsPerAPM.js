@@ -1,8 +1,6 @@
 export function visitsPerApm(apmName, visits) {
   // Filtrar las visitas por el APM proporcionado
-  console.log(visits, apmName)
   const filteredVisits = visits.filter(visit => visit.APM === apmName);
-  console.log(visits.filter(visit => (visit.APM === apmName && visit.FECHA.split('-')[1] === '07')))
   // Array para almacenar las visitas agrupadas por mes
   const groupedVisits = [];
   // Iterar sobre las visitas filtradas

@@ -31,7 +31,6 @@ const EditButton = ({ id }) => {
                 setName(response.name);
                 setDescription(response.description);
                 setMinimunQuantityOnStock(response.minimunQuantityOnStock);
-                                console.log(response)
                 setProductCharged(true)
             }).catch((err)=>{
                 console.log(err)
