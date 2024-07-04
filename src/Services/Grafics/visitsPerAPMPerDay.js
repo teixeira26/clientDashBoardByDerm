@@ -1,18 +1,17 @@
 export const visitsPerAPMPerDay = (visits, apm, month) => {
     // Filtra las visitas por el APM y el mes proporcionados
     const filteredVisits = visits.filter(visit => {
-      const date = new Date(visit.FECHA);
-      return visit.APM === apm && date.getMonth() + 1 === month;
+      return visit.APM === apm && parseInt(visit.FECHA.split('-')[1], 10) === month;
     });
+    console.log(filteredVisits, visits, apm, month)
   
     // Array para almacenar las visitas agrupadas por día
     const groupedVisits = [];
   
     // Iterar sobre las visitas filtradas
     filteredVisits.forEach(visit => {
-      const date = new Date(visit.FECHA);
-      const day = date.getDate();
-      const key = `${day}/${month}/${date.getFullYear()}`;
+      const [year, month, day] = visit.FECHA.split('-')
+      const key = `${day}/${month}/${year}`;
   
       // Buscar si ya existe un objeto para este día
       const existingVisit = groupedVisits.find(item => item.fecha === key);
