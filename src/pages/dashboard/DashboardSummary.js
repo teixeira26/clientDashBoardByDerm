@@ -50,9 +50,9 @@ const DashboardSummary = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-4  gap-4 mb-4">
         <InfoCard
-          onClick={() => {
+          onClick={visitsCardValue ? () => {
             setActive(OPTION_ONE);
-          }}
+          } : ()=>{}}
           porcentaje={visitsCardPorcentage}
           name={visitsCardTitle}
           status={visitsCardValue}
@@ -76,9 +76,9 @@ const DashboardSummary = () => {
         />
         <InfoCard
           extraClass={active === OPTION_TWO ? "bg-[#F5F6F6] " : ""}
-          onClick={() => {
+          onClick={recipeCardValue ? () => {
             setActive(OPTION_TWO);
-          }}
+          } : ()=>{}}
           porcentaje={recipeCardPorcentage}
           name={recipeCardTitle}
           status={recipeCardValue}
@@ -105,9 +105,9 @@ const DashboardSummary = () => {
         />
         <InfoCard
           extraClass={active === OPTION_TREE ? "bg-[#F5F6F6] " : ""}
-          onClick={() => {
+          onClick={dcPointsCardValue ? () => {
             setActive(OPTION_TREE);
-          }}
+          }: ()=>{}}
           porcentaje={dcPointsCardPorcentage}
           name={dcPointsCardTitle}
           status={dcPointsCardValue}

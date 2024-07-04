@@ -64,7 +64,7 @@ export default function DcPointsBarDesktop({handleClick, chartData, previousClic
                       activeBar={<Rectangle fill="pink" stroke="blue" />}
                     >
                       <LabelList
-                        dataKey="Total de DcPoints"
+                        dataKey="Total de Dc Points"
                         position="top"
                         fontSize={"12px"}
                       />

@@ -4,6 +4,7 @@ import { BACKEND_URL } from "../constants/constants";
 import dcPointsPerAPMandPerMonth from "../Services/Grafics/recipes/dcPointsPerApmAndMonth";
 import totalDcPointsPorFarmaciaYAPM from "../Services/Grafics/recipes/totalDcPointsPerPharmacyAndAPM";
 import totalDcPointsPerDermoAndAPM from "../Services/Grafics/recipes/totalRecipesPerDermoAndAPM";
+import { getRealAPMName } from "../Services/getRealApmNames";
 
 
 export const dcPointsGraphicContext = createContext();
@@ -25,7 +26,12 @@ const DcPointsGraphicProvider = ({ children }) => {
     if(dashboardStep === 0){fetch(`${BACKEND_URL}/dcPoints/getAll`)
       .then(async (res) => {
         let response = await res.json();
+        response = response.map((x) => {
+          return { ...x, "APM": getRealAPMName(x["APM"]), CANTIDAD: x.CANTIDAD && x.CANTIDAD > 0 ? x.CANTIDAD: 1};
+        });
+
         setInfoUnfiltered(response);
+
         setChartData(dcPointsPerAPMandPerMonth(response, actualMonth + 1));
         const total = dcPointsPerAPMandPerMonth(
           response,
