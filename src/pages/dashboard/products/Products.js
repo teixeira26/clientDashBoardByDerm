@@ -62,7 +62,6 @@ const Products = () => {
         fetch(`${BACKEND_URL}/products/getAll`)
             .then(res => res.json())
             .then(products => {
-                console.log(products)
                 setProducts(products)});
     }, []);
 

@@ -175,7 +175,7 @@ export const visitsGraphicContext = createContext();
                     tipoDeVisita: visit["TIPO DE VISITA"],
                     contacto: visit["CONTACTO"],
                   };
-                })
+                }).sort((a, b) => new Date(b.fecha) - new Date(a.fecha) )
             );
             setTitle(
               `Visitas de ${chartData[activeTooltipIndex].apm} en los últimos meses`
@@ -245,12 +245,13 @@ export const visitsGraphicContext = createContext();
               infoFiltered
                 .filter((x) => {
                   const visitDate = new Date(x.FECHA);
+                  console.log(visitDate)
                   const chartDate = parseInt(
                     chartData[activeTooltipIndex].fecha.split("/")[0]
                   );
                   return (
                     x.APM === chartData[activeTooltipIndex].apm &&
-                    visitDate.getMonth() === chartDate - 1
+                    parseInt(x.FECHA.split('-')[1], 10) === chartDate
                   );
                 })
                 .map((visit) => {
@@ -262,7 +263,7 @@ export const visitsGraphicContext = createContext();
                     tipoDeVisita: visit["TIPO DE VISITA"],
                     contacto: visit["CONTACTO"],
                   };
-                })
+                }).sort((a, b) => new Date(b.fecha) - new Date(a.fecha) )
             );
             setTitle(
               `Visitas de ${chartData[activeTooltipIndex].apm} - ${chartData[activeTooltipIndex].fecha}`
@@ -365,7 +366,7 @@ export const visitsGraphicContext = createContext();
               infoFiltered
                 .filter((x) => {
                   const visitDate = new Date(x.FECHA);
-                  return x.APM === actualApm && visitDate.getMonth() === month;
+                  return x.APM === actualApm && parseInt(x.FECHA.split('-')[1], 10) === month+1 ;
                 })
                 .map((visit) => {
                   return {
@@ -376,7 +377,7 @@ export const visitsGraphicContext = createContext();
                     tipoDeVisita: visit["TIPO DE VISITA"],
                     contacto: visit["CONTACTO"],
                   };
-                })
+                }).sort((a, b) => new Date(b.fecha) - new Date(a.fecha) )
             );
             setTitle(
               `Visitas de ${actualApm} - ${month + 1}/${new Date().getFullYear()}`
@@ -436,7 +437,7 @@ export const visitsGraphicContext = createContext();
               infoFiltered
                 .filter((x) => {
                   const visitDate = new Date(x.FECHA);
-                  return x.APM === actualApm && visitDate.getMonth() === month;
+                  return x.APM === actualApm && parseInt(x.FECHA.split('-')[1], 10) === month +1;
                 })
                 .map((visit) => {
                   return {
@@ -447,7 +448,7 @@ export const visitsGraphicContext = createContext();
                     tipoDeVisita: visit["TIPO DE VISITA"],
                     contacto: visit["CONTACTO"],
                   };
-                })
+                }).sort((a, b) => new Date(b.fecha) - new Date(a.fecha) )
             );
             setTitle(
               `Visitas de ${actualApm} - ${month + 1}/${new Date().getFullYear()}`
