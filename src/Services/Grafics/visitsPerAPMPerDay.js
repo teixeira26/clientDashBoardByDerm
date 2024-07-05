@@ -3,7 +3,6 @@ export const visitsPerAPMPerDay = (visits, apm, month) => {
     const filteredVisits = visits.filter(visit => {
       return visit.APM === apm && parseInt(visit.FECHA.split('-')[1], 10) === month;
     });
-    console.log(filteredVisits, visits, apm, month)
   
     // Array para almacenar las visitas agrupadas por día
     const groupedVisits = [];
