@@ -245,7 +245,6 @@ export const visitsGraphicContext = createContext();
               infoFiltered
                 .filter((x) => {
                   const visitDate = new Date(x.FECHA);
-                  console.log(visitDate)
                   const chartDate = parseInt(
                     chartData[activeTooltipIndex].fecha.split("/")[0]
                   );
