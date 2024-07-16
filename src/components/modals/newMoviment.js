@@ -8,13 +8,19 @@ import SaveButton from '../Buttons/SaveButton';
 import { toast } from 'react-toastify';
 import { BACKEND_URL } from '../../constants/constants';
 import Input from '../form/Input';
+import TableRow from '../TableRow';
+import DeleteButton from '../Buttons/DeleteButton';
+import { RiDeleteBin6Fill } from 'react-icons/ri';
+import { useAuth } from '../../hooks/useAuth';
 
-export default function NewMoviment({products, createModalToggle}) {
-    const [date, setdate] = useState(new Date().toLocaleDateString("en-CA"));
+export default function NewMoviment({products: productsReceived, createModalToggle}) {
+    const [date, setdate] = useState(new Date().toLocaleString("es-ar"));
+    const {role} = useAuth()
     const [typeOfMoviment, settypeOfMoviment] = useState("");
     const [suplierName, setSuplierName] = useState("");
-    const [responsable, setresponsable] = useState("");
-    const [product, setproduct] = useState("");
+    const [responsable, setresponsable] = useState(role.name);
+    const [products, setproducts] = useState([]);
+    const [newProduct, setNewproduct] = useState("");
     const [description, setdescription] = useState("-");
     const [enterpryse, setenterpryse] = useState("ByDerm");
     const [quantity, setquantity] = useState("");
@@ -25,55 +31,72 @@ export default function NewMoviment({products, createModalToggle}) {
     const [typeOfAdressee, setTypeOfAdressee] = useState("");
     const [adresseeName, setAdresseeName] = useState('');
     const [productionOrder, setProductionOrder] = useState('');
-  
-  
-    const handleChangeProduct = (option) => {
-      setproduct(option);
+     
+    const handleChangeNewProduct = (option) => {
+      setNewproduct(option);
     };
   
     const handleClearProduct = () => {
-      setproduct(null);
+      setNewproduct('');
     };
 
-
-    const addNewMoviment = (event) => {
-        event.preventDefault();
-        const productDetails = {
-          date,
-          typeOfMoviment,
-          suplierName,
-          responsable,
-          product: product.value,
-          description,
-          enterpryse,
-          quantity: typeOfMoviment === "SALIDA" ? `-${quantity}` : quantity,
-          lot,
-          expiration,
-          referNumber,
-          suplierName,
-          adresseeName,
-          productionOrder,
-          typeOfProduct,
-          typeOfAdressee,
-        }; // send data to server
-        fetch(`${BACKEND_URL}/moviments/add`, {
-          method: "POST",
-          headers: {
-            "content-type": "application/json",
-          },
-          body: JSON.stringify(productDetails),
-        })
-          .then((res) => {
-            toast.success("Movimiento cargado con exito 💪");
-            const quantityInput = document.getElementById('quantity'); 
-            quantityInput.value = ''; // Clear the input
-            handleClearProduct();
-            res.json();
-          })
-          .catch(() => toast.error("Hubo un error al agregar el movimiento 😢"));
+    const addNewMoviment = async (event) => {
+      event.preventDefault();
+      if (!typeOfMoviment) {
+        toast.error("Debes cargar un tipo de movimiento 😢");
+        return
+      }
+      if (products.length == 0) {
+        toast.error("Debes cargar productos antes de agregar un movimiento 😢");
+        return
+      } else if(products.length > 0) {
+        const requests = products.map((product) => {
+          const productDetails = {
+            date,
+            typeOfMoviment,
+            suplierName,
+            responsable,
+            product: product.product,
+            description,
+            enterpryse,
+            quantity: typeOfMoviment === "SALIDA" ? `-${product.quantity}` : product.quantity,
+            lot,
+            expiration,
+            referNumber,
+            suplierName,
+            adresseeName,
+            productionOrder,
+            typeOfProduct,
+            typeOfAdressee,
+          };
     
-      };
-
+          return fetch(`${BACKEND_URL}/moviments/add`, {
+            method: "POST",
+            headers: {
+              "content-type": "application/json",
+            },
+            body: JSON.stringify(productDetails),
+          })
+          .then((res) => {
+            if (!res.ok) {
+              throw new Error('Network response was not ok');
+            }
+            return res.json();
+          });
+        });
+    
+        try {
+          await Promise.all(requests);
+          toast.success("Movimiento cargado con éxito 💪");
+          const quantityInput = document.getElementById('quantity'); 
+          quantityInput.value = ''; // Clear the input
+          handleClearProduct();
+        } catch (error) {
+          toast.error("Hubo un error al agregar el movimiento 😢");
+        }
+      }
+    };
+  
 
   return (
     <div className="absolute w-full h-full left-0 top-0 flex justify-center items-center">
@@ -91,14 +114,7 @@ export default function NewMoviment({products, createModalToggle}) {
 
           <form onSubmit={(e) => addNewMoviment(e)} className="mx-8">
             <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-x-4 gap-y-2 mb-2">
-              <Select
-                onchange={(e) => setresponsable(e.target.value)}
-                title={"Nombre del responsable"}
-                type="text"
-                placeholder="Juan Perez"
-                name="name"
-                options={["Veronica", "Viviana", "Valeria"].map((c) => c)}
-              />
+              <div className='col-span-3'>
               <Select
                 onchange={(e) => settypeOfMoviment(e.target.value)}
                 title={"Tipo de Movimiento"}
@@ -106,19 +122,21 @@ export default function NewMoviment({products, createModalToggle}) {
                 isRequired="required"
                 options={["ENTRADA", "SALIDA", "ENTRADA S/ REMITO"]}
               />
+              </div>
+             
 <div className='col-span-2'>
 <SelectData
-                onchange={handleChangeProduct}
+                onchange={handleChangeNewProduct}
                 handleClear={handleClearProduct}
                 title={"Nombre de articulo"}
                 type="text"
                 placeholder="26004 - Cleanser Aqua"
                 name="aricleName"
                 isRequired="required"
-                value={product}
+                value={newProduct}
                 id={'product'}
                 options={
-                products    
+                productsReceived    
             .map((c) => c.name.toUpperCase())
                   .sort((x, y) => {
                     if (x > y) return 1;
@@ -128,16 +146,57 @@ export default function NewMoviment({products, createModalToggle}) {
 </div>
               
 
-              
+     
               <Input
                 onchange={(e) => setquantity(e.target.value)}
                 title={"Cantidad"}
                 type="number"
                 placeholder="250"
                 name="cantity"
-                isRequired="required"
                 id={'quantity'}
               />
+                <button onClick={(e)=>{
+                  e.preventDefault();
+                  setproducts([...products, {product: newProduct.value, quantity: quantity}])
+                }} className={`btn flex col-span-3 items-center gap-x-2 bg-[#D76611] border-white text-white hover:bg-[#c65500] hover:border-white`}>
+            Añadir
+        </button>
+              <table className="table table-zebra table-compact col-span-3 z-0">
+        <thead>
+
+
+        <tr>
+      {products && products.length> 0 && ['Nombre de Articulo', 'Cantidad', '']?.map((tableHeadItem, index) => (
+        <th key={index} className="text-xs md:text-2xs lg:text-md">
+          {tableHeadItem}
+        </th>
+      ))}
+    </tr>
+        </thead>
+        <tbody className=''>
+          {products && products.length> 0 &&products.map((moviment, index) => (
+            <TableRow
+              key={moviment._id}
+              tableRowsData={[
+              moviment.product,
+              moviment.quantity,
+
+                <span className="flex items-center gap-x-1 ">
+                   <button onClick={() => {setproducts(products.filter(product => product !== moviment))}}
+            className="z-10 block p-1 text-red-700 transition-all bg-red-100 border-2 border-white rounded-full active:bg-red-50 hover:scale-110 focus:outline-none focus:ring"
+            type="button"
+        >
+            <RiDeleteBin6Fill />
+        </button>
+                </span>,
+              ]}
+            />
+          ))}
+        </tbody>
+      </table>
+    
+      
+              
               <Input
                 onchange={(e) => setdescription(e.target.value)}
                 title={"Información Adicional"}
@@ -277,8 +336,9 @@ export default function NewMoviment({products, createModalToggle}) {
                 )
               )}
             </div>
-            <SaveButton extraClass={"mt-4 w-full"} />
-          </form>
+            <button className={`btn flex w-full col-span-3 items-center gap-x-2 bg-[#D76611] border-white text-white hover:bg-[#c65500] hover:border-white`}>
+            Guardar
+        </button>          </form>
         </label>
       </label>
 

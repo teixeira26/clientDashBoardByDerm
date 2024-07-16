@@ -32,9 +32,9 @@ const Dashboard = () => {
                         
                         </Link>
 
-                        {['superAdmin', 'stockLeader'].includes(role.role) && <LinkComponents to={''} icon={<MdSpaceDashboard className='text-lg' />} name={'Dashboard'} />}
+                        {['superAdmin', 'comercialLeader', 'apms'].includes(role.role) && <LinkComponents to={''} icon={<MdSpaceDashboard className='text-lg' />} name={'Dashboard'} />}
 
-                       {['superAdmin', 'apms', 'comercialLeader'].includes(role.role) &&  <DetailsComponent
+                       {['superAdmin', 'stockLeader', ''].includes(role.role) &&  <DetailsComponent
                             icon={<RiProductHuntFill className='text-lg' />}
                             name={'Productos'}
                             subMenus={

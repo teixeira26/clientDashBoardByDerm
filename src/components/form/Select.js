@@ -6,7 +6,7 @@ const Select = ({ title = 'Select Field', name, isRequired, id, onchange, option
             <label className="label">
                 <span className="label-text">{title}</span>
             </label>
-            <select id={id} className="select select-bordered select-xs rounded-[4px]  w-full max-w-xs" name={name} required={isRequired} onChange={onchange}>
+            <select id={id} className="select select-bordered select-xs h-[38px] rounded-[4px]  w-full max-w-xs" name={name} required={isRequired} onChange={onchange}>
                 <option disabled selected>Elija una opción</option>
 
                 {

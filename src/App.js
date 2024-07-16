@@ -54,20 +54,40 @@ function App() {
     const queryString = window.location.search;
     const queryParams = new URLSearchParams(queryString);
     const value = queryParams.get('admin');
-    if((value === 'lesag456123')){
-      navigate('/register')
+  
+    // Si está cargando, no hacer nada
+    if (isLoading) {
+      return;
     }
-    else if (role && !isLoading) {
-      console.log(role);
-      if (role.role === roles.INITIAL) navigate('/dashboard');
-      if (role.role === roles.STOCKLEADER) navigate('/dashboard/products/non-pharmacy');
-      if (role.role === roles.SUPERADMIN) navigate('/dashboard/products/non-pharmacy');
+  
+    // Si el valor del parámetro es 'lesag456123', navegar a '/register'
+    if (value === 'lesag456123') {
+      navigate('/register');
+      return; // Salir del useEffect para evitar otras redirecciones
     }
-   
-    else if((!role)){
+  
+    // Si no hay role definido, navegar a '/login'
+    if (!role) {
       navigate('/login');
+      return; // Salir del useEffect para evitar otras redirecciones
     }
-  }, [role]);
+  
+    // Si el role está definido, navegar basado en el role.role
+    if (role) {
+      switch (role.role) {
+        case roles.INITIAL:
+          navigate('/dashboard');
+          break;
+        case roles.STOCKLEADER:
+        case roles.SUPERADMIN:
+          navigate('/dashboard/products/non-pharmacy');
+          break;
+        default:
+          // Opcional: manejar otros roles o un caso por defecto
+          break;
+      }
+    }
+  }, [role, isLoading]);
 
   if(isLoading) return <Loading/>
   return (

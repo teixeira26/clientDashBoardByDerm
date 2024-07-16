@@ -13,7 +13,6 @@ import { useAuth } from '../hooks/useAuth';
 const UserNavbar = () => {
     const {role} = useAuth();
 
-
     return (
         
         <div className="navbar bg-white fixed top-0 left-0 right-0 z-50 shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)]">
@@ -30,7 +29,7 @@ const UserNavbar = () => {
             <div className="navbar-end">
                 <div className="dropdown dropdown-end hidden md:block lg:block">
                     <div tabIndex="0" className='flex items-center cursor-pointer'>
-                        <p className='mr-4'>Matheus</p>
+                        <p className='mr-4'>{role.name}</p>
                         <label className="btn btn-ghost btn-circle avatar">
                             <div className="w-10 rounded-full">
                                 <img src={user} alt='user avatar' />

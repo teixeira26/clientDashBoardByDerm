@@ -1,58 +1,39 @@
 import React from "react";
-import SaveButton from "../../../components/Buttons/SaveButton";
 import PrintButton from "../../../components/Buttons/PrintButton";
 import NewButton from "../../../components/Buttons/NewButton";
-import Input from "../../../components/form/Input";
-import Select from "../../../components/form/Select";
-import ModalCloseButton from "../../../components/Buttons/ModalCloseButton";
-import ModalHeading from "../../../components/headings/ModalHeading";
 import { useState } from "react";
 import { useEffect } from "react";
 import RefreshButton from "../../../components/Buttons/RefreshButton";
 import TableRow from "../../../components/TableRow";
 import EditButton from "../../../components/Buttons/EditButton";
 import DeleteButton from "../../../components/Buttons/DeleteButton";
-import { toast } from "react-toastify";
 import DashboardPageHeading from "../../../components/headings/DashboardPageHeading";
-import { DatePicker } from "../../../components/Buttons/datePicker";
 import { BACKEND_URL } from "../../../constants/constants";
-import SelectData from "../../../components/form/SelectData";
 import NewMoviment from "../../../components/modals/newMoviment";
 import { createExcel } from "../../../hooks/useCreateExcel";
 
 const Moviments = () => {
   const tableHeadItems = [
-    "Nº",
+    "Producto",
+    "Cantidad",
+    "Nº de remito",
+    'Fecha',
+    "Tipo de Movimiento",
     "Responsable Interno",
     "Tipo de proveedor",
     "Nombre de proveedor",
-    "Producto",
+
     "Comentários",
-    "Tipo de Movimiento",
+
     "Nombre de Destinatario",
     "Orden de producción",
     "Tipo de Producto",
-    "Cantidad",
     "Producción",
     "Fecha de Vencimiento",
-    "Nº de remito",
+
   ];
 
-  const [date, setdate] = useState(new Date().toLocaleDateString("en-CA"));
-  const [typeOfMoviment, settypeOfMoviment] = useState("");
-  const [suplierName, setSuplierName] = useState("");
-  const [responsable, setresponsable] = useState("");
-  const [product, setproduct] = useState("");
-  const [description, setdescription] = useState("-");
-  const [enterpryse, setenterpryse] = useState("ByDerm");
-  const [quantity, setquantity] = useState("");
-  const [lot, setlot] = useState("");
-  const [expiration, setexpiration] = useState("");
-  const [referNumber, setreferNumber] = useState("");
-  const [typeOfProduct, setTypeOfProduct] = useState("");
-  const [typeOfAdressee, setTypeOfAdressee] = useState("");
-  const [adresseeName, setAdresseeName] = useState('');
-  const [productionOrder, setProductionOrder] = useState('');
+const [page, setPage] = useState([])
 
 
   const [createModalState, setCreateModalState] = useState(false)
@@ -97,10 +78,19 @@ const Moviments = () => {
   }, []);
 
   useEffect(() => {
-    fetch(`${BACKEND_URL}/moviments/getAll`)
+    if(page.length === 0){
+      fetch(`${BACKEND_URL}/moviments/getAll`)
       .then((res) => res.json())
-      .then((products) => setMoviments(products));
-  }, []);
+      .then((products) => {
+      setMoviments(products.data)});
+    }
+    else{
+      fetch(`${BACKEND_URL}/moviments/getAll?${page[0] === 'previous' ? 'endBefore' : 'startAfter'}=${page[1]}`)
+      .then((res) => res.json())
+      .then((products) => setMoviments(products.moviments));
+    }
+
+  }, [page]);
 
   return (
     <section className="p-4 mt-16">
@@ -229,29 +219,33 @@ const Moviments = () => {
       <table className="table table-zebra table-compact">
         <thead>{tableHead}</thead>
         <tbody>
-          {moviments.sort((a, b) => new Date(b.date) - new Date(a.date) ).map((moviment, index) => (
+          {moviments?.sort((a, b) => new Date(b.date) - new Date(a.date) ).map((moviment, index) => (
             <TableRow
               key={moviment._id}
               tableRowsData={[
-                index + 1,
+                moviment.product,
+                moviment.quantity,
+                `X-0001-0000${moviment.referNumber}`,
+                moviment.date,
+                moviment.typeOfMoviment,
                 moviment.responsable,
                 moviment.typeOfAdressee,
                 moviment.suplierName,
-                moviment.product,
                 moviment.description,
-                moviment.typeOfMoviment,
+
                 moviment.adresseeName,
                 moviment.productionOrder,
                 moviment.setTypeOfProduct,
-                moviment.quantity,
+
                 moviment.lot,
                 moviment.expiration,
-                `X-0001-0000${moviment.referNumber}`,
+
                 <span className="flex items-center gap-x-1">
-                  <EditButton />
+                  {/* <EditButton /> */}
                   <DeleteButton
                     deleteApiLink="https://stringlab-ims-server.herokuapp.com/api/purchases/pharmacy/"
-                    itemId={moviment._id}
+                    deleteURL={'/moviments/delete/'}
+                    itemId={moviment.id}
                     name={moviment.tradeName}
                   />
                 </span>,
@@ -260,6 +254,10 @@ const Moviments = () => {
           ))}
         </tbody>
       </table>
+      <div className="flex gap-6">
+      <button className={`mt-2  py-1 px-3 hover:bg-[#dddddd] rounded-[4px]`}><span className="font-semibold">{`< `}</span>{`Anterior`}</button>
+        <button className="mt-2  py-1 px-3 hover:bg-[#dddddd] rounded-[4px]">{`Proxima `}<span className="font-semibold">{`> `}</span></button>
+      </div>
     </section>
   );
 };

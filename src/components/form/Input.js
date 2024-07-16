@@ -6,7 +6,7 @@ const Input = ({ title = 'Input Field', type = 'text', placeholder = 'Type Here'
             <label className="label">
                 <span className="label-text">{title}</span>
             </label>
-            <input id={id} type={type} onCLick={onClick} placeholder={placeholder} className="input input-xs input-bordered w-full max-w-xs" name={name} required={isRequired} defaultValue={value} onChange={onchange} />
+            <input id={id} type={type} onCLick={onClick} placeholder={placeholder} className="input input-xs input-bordered w-full h-[38px] rounded-[4px] max-w-xs" name={name} required={isRequired} defaultValue={value} onChange={onchange} />
         </div>
     );
 };
