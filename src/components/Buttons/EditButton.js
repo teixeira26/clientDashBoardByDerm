@@ -28,7 +28,6 @@ const EditButton = ({ id, setModal }) => {
             .then(async (res) => {
                 const response = await res.json()
                 setName(response.name);
-                console.log(response)
                 setDescription(response.description);
                 setMinimunQuantityOnStock(response.minimunQuantityOnStock);
                 setProduct(response)
@@ -45,9 +44,7 @@ const EditButton = ({ id, setModal }) => {
    
     const updateProduct = event => {
         event.preventDefault();
-        alert('ooooooo')
 
-        console.log(product, description)
 
        const body = {
         description: description && description.length > 0 ? description : product.description,
@@ -56,7 +53,6 @@ const EditButton = ({ id, setModal }) => {
         quantity: product.quantity,
         active: product.active
        }
-       console.log(body)
 
 
         // send data to server

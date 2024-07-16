@@ -74,7 +74,6 @@ function App() {
   
     // Si el role está definido, navegar basado en el role.role
     if (role) {
-      console.log(role);
       switch (role.role) {
         case roles.INITIAL:
           navigate('/dashboard');

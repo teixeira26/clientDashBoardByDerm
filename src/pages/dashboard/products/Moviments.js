@@ -82,7 +82,6 @@ const [page, setPage] = useState([])
       fetch(`${BACKEND_URL}/moviments/getAll`)
       .then((res) => res.json())
       .then((products) => {
-      console.log(products)
       setMoviments(products.data)});
     }
     else{

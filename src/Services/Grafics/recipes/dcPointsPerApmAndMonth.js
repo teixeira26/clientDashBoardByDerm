@@ -8,7 +8,6 @@ const dcPointsPerAPMandPerMonth = (dcPoints, month)=>{
     const date = new Date(year, monthd, day);
     return date.getMonth() === month && date.getFullYear() === currentYear;
   });
-console.log(filteredDcPoints)
   const groupedByAPMCarga = filteredDcPoints.reduce((acc, dcPoint) => {
     const apmCarga = dcPoint.APM;
     const cantidad = Number(dcPoint.CANTIDAD);

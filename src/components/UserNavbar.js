@@ -12,7 +12,6 @@ import { useAuth } from '../hooks/useAuth';
 
 const UserNavbar = () => {
     const {role} = useAuth();
-console.log(role.name)
 
     return (
         
