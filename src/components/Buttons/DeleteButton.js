@@ -3,9 +3,9 @@ import { RiDeleteBin6Fill } from 'react-icons/ri';
 import { toast } from 'react-toastify';
 import { BACKEND_URL } from '../../constants/constants';
 
-const DeleteButton = ({ itemId }) => {
+const DeleteButton = ({ deleteURL, itemId }) => {
     const deleteItem = _id => {
-        fetch(`${BACKEND_URL}/products/delete/${_id}`, {
+        fetch(`${BACKEND_URL}${deleteURL}${_id}`, {
             method: 'DELETE',
             headers: {
                 'content-type': 'application/json'

@@ -16,9 +16,11 @@ import GraficsFactoryTemplate from "../../components/graficsFactory.template.js"
 import GraphicsFactory from "../../components/graphicsFactory.js";
 import { recipesGraphicContext } from "../../contexts/recipesContext.js";
 import { dcPointsGraphicContext } from "../../contexts/dcPointsContext.js";
+import { useAuth } from "../../hooks/useAuth.js";
 
 const DashboardSummary = () => {
   const [active, setActive] = useState(OPTION_ONE);
+  const {role} = useAuth()
 
   window.addEventListener("load", () => {
     const leftBox = document.getElementById("left-box");
@@ -47,7 +49,7 @@ const DashboardSummary = () => {
       <div className="flex justify-between mb-6">
         <RefreshButton />
       </div>
-
+<p className="mb-6 text-[20px]">Bienvenido de vuelta <span className="font-bold">{`${role.name && role.name.split(' ')[0]}`}</span>  👋</p>
       <div className="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-4  gap-4 mb-4">
         <InfoCard
           onClick={visitsCardValue ? () => {

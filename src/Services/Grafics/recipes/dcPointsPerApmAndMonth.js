@@ -4,11 +4,11 @@ const dcPointsPerAPMandPerMonth = (dcPoints, month)=>{
 
   const validDcPoints = dcPoints.filter(x=>(x['VV+'] && x['DERMOS']))
   const filteredDcPoints = dcPoints.filter(dcPoint => {
-    const [day, monthd, year] = dcPoint['VV+'].split('/') 
+    const [day, monthd, year] = dcPoint['VV+']?.split('/') 
     const date = new Date(year, monthd, day);
     return date.getMonth() === month && date.getFullYear() === currentYear;
   });
-
+console.log(filteredDcPoints)
   const groupedByAPMCarga = filteredDcPoints.reduce((acc, dcPoint) => {
     const apmCarga = dcPoint.APM;
     const cantidad = Number(dcPoint.CANTIDAD);

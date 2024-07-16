@@ -9,49 +9,54 @@ import SaveButton from './SaveButton';
 import { toast } from 'react-toastify';
 import { BACKEND_URL } from '../../constants/constants';
 
-const EditButton = ({ id }) => {
-    const [product, setProduct] = useState();
+const EditButton = ({ id, setModal }) => {
     const [isProductCharged, setProductCharged] = useState(false);
+    const [product, setProduct] = useState(null)
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
     const [minimunQuantityOnStock, setMinimunQuantityOnStock] = useState('')
 
-    const [active, setActive] = useState(false);
     const toggleModal =()=>{
-        setActive(!active)
+        setModal(false)
     }
 
 
 
     useEffect(() => {
-        if(active){
+       
             fetch(`${BACKEND_URL}/products/${id}`)
             .then(async (res) => {
                 const response = await res.json()
                 setName(response.name);
+                console.log(response)
                 setDescription(response.description);
                 setMinimunQuantityOnStock(response.minimunQuantityOnStock);
+                setProduct(response)
                 setProductCharged(true)
             }).catch((err)=>{
                 console.log(err)
             })
            
-        }
+        
        
 
-    }, [active]);
+    }, []);
 
    
     const updateProduct = event => {
         event.preventDefault();
+        alert('ooooooo')
+
+        console.log(product, description)
 
        const body = {
-        description: description.length > 0 ? description : product.description,
+        description: description && description.length > 0 ? description : product.description,
         minimunQuantityOnStock: minimunQuantityOnStock.length > 0 ? minimunQuantityOnStock : product.minimunQuantityOnStock,
         name: name.length > 0 ? name : product.name,
         quantity: product.quantity,
         active: product.active
        }
+       console.log(body)
 
 
         // send data to server
@@ -71,39 +76,45 @@ const EditButton = ({ id }) => {
                     ()=>toast.error('Hubo un error al intentar actualizar el producto 😢')
                 )
 
-        event.target.reset();
     };
 
     return (
-        <div>
-            {/* update a pharmacy product */}
-            <input type="checkbox" id="update-pharmacy-product" className="modal-toggle" />
+        <>
+        <div  className='w-[100%] h-[100vh] fixed  left-0 top-0 flex  z-[100000000] justify-center items-center '>
+  
+        <div onClick={toggleModal} className='w-[100%] h-[100vh] fixed  z-[1] bg-[#00000070] left-0 top-0 flex justify-center items-center '></div>
 
-            <label htmlFor="" className="modal cursor-pointer">
-                <label className="modal-box lg:w-7/12 md:w-10/12 w-11/12 max-w-4xl relative" htmlFor="">
-                    <ModalCloseButton modalId={'update-pharmacy-product'} />
+<label className="lg:w-7/12 md:w-10/12 w-11/12 max-w-4xl absolute z-[2] bg-[#ffffff] rounded-lg p-4" htmlFor="">
+                    <div onClick={toggleModal}>
+                    <ModalCloseButton />
 
-                    <ModalHeading modalHeading={'Actualizar Producto'} />
+                    </div>
+
+                    <ModalHeading />
 
                     <form onSubmit={updateProduct}>
-                        <div className='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-4 gap-y-1 mb-2'>
+                        <div className='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-x-4 gap-y-1 mb-2'>
                         <Input value={name} onchange={(e)=>{setName(e.target.value)}} title={'Nombre'} type='text' placeholder='Cleanser Aqua 150ml' name='aricleName' isRequired='required'/>
-                            <Input value={description} onchange={(e)=>{setDescription(e.target.value)}} title={'Descripción'} type='text' placeholder='-' name='description' isRequired='required' />
+                            <Input value={description} onchange={(e)=>{setDescription(e.target.value)}} title={'Descripción'} type='text' placeholder='-' name='description'/>
                             <Input value={minimunQuantityOnStock} onchange={(e)=>{setMinimunQuantityOnStock(e.target.value)}} title={'Cantidad Mínima en Stock'} type='number' placeholder='250' name='quantity' isRequired='required' />
 
 
                         </div>
-               
-                        <SaveButton extraClass={'mt-4 w-full'} />
+               <div onClick={(e)=>updateProduct(e)}>
+               <SaveButton extraClass={'mt-4 w-full'} />
+
+               </div>
 
                     </form>
                 </label>
-            </label>
 
-            <label onClick={()=>toggleModal()} htmlFor='update-pharmacy-product' className={`gap-x-2 modal-button z-10 block p-1 text-blue-700 transition-all bg-blue-100 border-2 border-white rounded-full active:bg-blue-50 hover:scale-110 focus:outline-none focus:ring`}>
-                <BiEdit />
-            </label>
+
+
+               
+
+           
         </div>
+        </>
     );
 };
 

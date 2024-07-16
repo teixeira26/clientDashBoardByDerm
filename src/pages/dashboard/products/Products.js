@@ -16,6 +16,7 @@ import DashboardPageHeading from '../../../components/headings/DashboardPageHead
 import AddModal from '../../../components/modals/AddModal';
 import { BACKEND_URL } from '../../../constants/constants';
 import { createExcel } from '../../../hooks/useCreateExcel';
+import { BiEdit } from 'react-icons/bi';
 
 const Products = () => {
     const tableHeadItems = ['Nº de Artículo' ,'Nombre de Producto', 'Descripción', 'Cantidad Mínima en stock', 'Cantidad'];
@@ -51,6 +52,7 @@ const Products = () => {
         event.target.reset();
     };
     const [name, setName] = useState('');
+    const [updateModal, setUpdateModal] = useState(false)
     const [description, setDescription] = useState('-');
     const [minimunQuantityOnStock, setMinimunQuantityOnStock] = useState('')
 
@@ -69,6 +71,7 @@ const Products = () => {
 
     return (
         <section className='p-4 mt-16'>
+            {updateModal && <EditButton id={updateModal} setModal={setUpdateModal}/>}
             <DashboardPageHeading
                 name='Productos'
                 value={products.length}
@@ -123,8 +126,12 @@ const Products = () => {
                                         product.quantity,
                                         '',
                                         <span className='flex items-center gap-x-1'>
-                                            <EditButton id={product.id} />
+                                            <label onClick={()=>{
+                                                setUpdateModal(product.id)}} htmlFor='update-pharmacy-product' className={`gap-x-2 cursor-pointer modal-button z-10 block p-1 text-blue-700 transition-all bg-blue-100 border-2 border-white rounded-full active:bg-blue-50 hover:scale-110 focus:outline-none focus:ring`}>
+                                                <BiEdit />
+                                             </label>
                                             <DeleteButton
+                                            deleteURL={'/products/delete/'}
                                                 itemId={product.id}
                                                  />
                                         </span>
