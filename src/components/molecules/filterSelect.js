@@ -6,17 +6,10 @@ const DropdownIndicator = (props
 ) => {
   return (
     <components.DropdownIndicator {...props}>
-      dsadas
+      🔎
     </components.DropdownIndicator>
   );
 };
-
-const colourOptions = [
-    { value: 'red', label: 'Red' },
-    { value: 'blue', label: 'Blue' },
-    { value: 'green', label: 'Green' },
-    { value: 'yellow', label: 'Yellow' },
-  ];
   
 
   const customStyles = {
@@ -29,15 +22,28 @@ const colourOptions = [
       fontWeight: 'bold', 
     }),
   };
+ 
 
 
-export default ({options}) => (
+export default ({options, setSelectedFilters}) => {
+        const handleChange = (selectedOptions) => {
+          // Llamar a la función onChange pasada como prop
+
+          if(setSelectedFilters){
+            setSelectedFilters(selectedOptions.map(x=>x.value))
+
+          }
+        };
+
+    return(
   <Select
     closeMenuOnSelect={false}
     components={{ DropdownIndicator }}
     defaultValue={[]}
     isMulti
-    options={colourOptions}
+    options={options.map(x=>{return {value: x, label: x}})}
     styles={customStyles}
+    onChange={handleChange}
+
   />
-);
+)};

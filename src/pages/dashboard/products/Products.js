@@ -70,24 +70,33 @@ const Products = () => {
             .then(res => res.json())
             .then(products => {
            
-                let set = new Set(products);
+                let set = new Set(products.map(product=>product.category));
                 let arraySinDuplicados = [...set];
-                console.log(arraySinDuplicados)
+                setcategories(arraySinDuplicados)
                 setProducts(products)});
               
     }, []);
 
-    
+    useEffect(()=>{
+        console.log(filters)
+    }, [filters])
+
+    const setSelectedFilters = (selectedOptions) => {
+        setFilters(selectedOptions);
+      };
 
     return (
         <section className='p-4 mt-16'>
-            <SelectDataPersonalized options={[]}/>
+            
             
          
             {updateModal && <EditButton id={updateModal} setModal={setUpdateModal}/>}
             <DashboardPageHeading
                 name='Productos'
-                value={products.length}
+                value={products.filter(x=>{
+                    if(filters.length > 0) return filters.includes(x.category)
+                else return x
+                }).length}
                 buttons={[
                     <NewButton title={'Crear'} modalId='create-new-product' />,
                     <RefreshButton />,
@@ -117,7 +126,11 @@ const Products = () => {
                     </form>
                 </label>
             </label>
+            <div className='mb-4 relative mt-[-16px] z-[100]'>
 
+<SelectDataPersonalized options={categories} setSelectedFilters={setSelectedFilters} />
+
+</div>
 
             <table className="table table-zebra table-compact">
                 <thead>
@@ -127,7 +140,10 @@ const Products = () => {
                 </thead>
                 <tbody>
                     {
-                        products.map((product, index) =>
+                        products.filter(x=>{
+                            if(filters.length > 0) return filters.includes(x.category)
+                        else return x
+                        }).map((product, index) =>
                             <TableRow
                                 key={product.id}
                                 tableRowsData={
