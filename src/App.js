@@ -43,7 +43,6 @@ import { useEffect, useState } from 'react';
 import { roles } from './constants/roles.js';
 import { AuthProvider, useAuth } from './hooks/useAuth.js';
 import Loading from './components/Loading.js';
-import VisitsGraphicProvider from './contexts/visitsContext.js';
 import DashboardTemplate from './components/graficsFactory.template.js';
 
 function App() {

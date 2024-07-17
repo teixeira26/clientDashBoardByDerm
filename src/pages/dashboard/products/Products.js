@@ -17,6 +17,9 @@ import AddModal from '../../../components/modals/AddModal';
 import { BACKEND_URL } from '../../../constants/constants';
 import { createExcel } from '../../../hooks/useCreateExcel';
 import { BiEdit } from 'react-icons/bi';
+import SelectData from '../../../components/form/SelectData';
+import SelectDataPersonalized from '../../../components/molecules/filterSelect.js';
+
 
 const Products = () => {
     const tableHeadItems = ['Nº de Artículo' ,'Nombre de Producto', 'Descripción', 'Cantidad Mínima en stock', 'Cantidad'];
@@ -55,6 +58,8 @@ const Products = () => {
     const [updateModal, setUpdateModal] = useState(false)
     const [description, setDescription] = useState('-');
     const [minimunQuantityOnStock, setMinimunQuantityOnStock] = useState('')
+    const [filters, setFilters] = useState([])
+    const [categories, setcategories] = useState([])
 
 
     const [products, setProducts] = useState([]);
@@ -64,17 +69,34 @@ const Products = () => {
         fetch(`${BACKEND_URL}/products/getAll`)
             .then(res => res.json())
             .then(products => {
+           
+                let set = new Set(products.map(product=>product.category));
+                let arraySinDuplicados = [...set];
+                setcategories(arraySinDuplicados)
                 setProducts(products)});
+              
     }, []);
 
-    
+    useEffect(()=>{
+        console.log(filters)
+    }, [filters])
+
+    const setSelectedFilters = (selectedOptions) => {
+        setFilters(selectedOptions);
+      };
 
     return (
         <section className='p-4 mt-16'>
+            
+            
+         
             {updateModal && <EditButton id={updateModal} setModal={setUpdateModal}/>}
             <DashboardPageHeading
                 name='Productos'
-                value={products.length}
+                value={products.filter(x=>{
+                    if(filters.length > 0) return filters.includes(x.category)
+                else return x
+                }).length}
                 buttons={[
                     <NewButton title={'Crear'} modalId='create-new-product' />,
                     <RefreshButton />,
@@ -104,7 +126,11 @@ const Products = () => {
                     </form>
                 </label>
             </label>
+            <div className='mb-4 relative mt-[-16px] z-[100]'>
 
+<SelectDataPersonalized options={categories} setSelectedFilters={setSelectedFilters} />
+
+</div>
 
             <table className="table table-zebra table-compact">
                 <thead>
@@ -114,7 +140,10 @@ const Products = () => {
                 </thead>
                 <tbody>
                     {
-                        products.map((product, index) =>
+                        products.filter(x=>{
+                            if(filters.length > 0) return filters.includes(x.category)
+                        else return x
+                        }).map((product, index) =>
                             <TableRow
                                 key={product.id}
                                 tableRowsData={
