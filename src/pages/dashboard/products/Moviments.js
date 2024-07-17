@@ -5,7 +5,6 @@ import { useState } from "react";
 import { useEffect } from "react";
 import RefreshButton from "../../../components/Buttons/RefreshButton";
 import TableRow from "../../../components/TableRow";
-import EditButton from "../../../components/Buttons/EditButton";
 import DeleteButton from "../../../components/Buttons/DeleteButton";
 import DashboardPageHeading from "../../../components/headings/DashboardPageHeading";
 import { BACKEND_URL } from "../../../constants/constants";
@@ -22,15 +21,12 @@ const Moviments = () => {
     "Responsable Interno",
     "Tipo de proveedor",
     "Nombre de proveedor",
-
     "Comentários",
-
     "Nombre de Destinatario",
     "Orden de producción",
     "Tipo de Producto",
     "Producción",
     "Fecha de Vencimiento",
-
   ];
 
 const [page, setPage] = useState([])

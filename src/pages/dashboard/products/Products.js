@@ -17,6 +17,9 @@ import AddModal from '../../../components/modals/AddModal';
 import { BACKEND_URL } from '../../../constants/constants';
 import { createExcel } from '../../../hooks/useCreateExcel';
 import { BiEdit } from 'react-icons/bi';
+import SelectData from '../../../components/form/SelectData';
+import SelectDataPersonalized from '../../../components/molecules/filterSelect.js';
+
 
 const Products = () => {
     const tableHeadItems = ['Nº de Artículo' ,'Nombre de Producto', 'Descripción', 'Cantidad Mínima en stock', 'Cantidad'];
@@ -55,6 +58,8 @@ const Products = () => {
     const [updateModal, setUpdateModal] = useState(false)
     const [description, setDescription] = useState('-');
     const [minimunQuantityOnStock, setMinimunQuantityOnStock] = useState('')
+    const [filters, setFilters] = useState([])
+    const [categories, setcategories] = useState([])
 
 
     const [products, setProducts] = useState([]);
@@ -64,13 +69,21 @@ const Products = () => {
         fetch(`${BACKEND_URL}/products/getAll`)
             .then(res => res.json())
             .then(products => {
+           
+                let set = new Set(products);
+                let arraySinDuplicados = [...set];
+                console.log(arraySinDuplicados)
                 setProducts(products)});
+              
     }, []);
 
     
 
     return (
         <section className='p-4 mt-16'>
+            <SelectDataPersonalized options={[]}/>
+            
+         
             {updateModal && <EditButton id={updateModal} setModal={setUpdateModal}/>}
             <DashboardPageHeading
                 name='Productos'
