@@ -106,7 +106,9 @@ const Products = () => {
             </label>
 
 
-            <table className="table table-zebra table-compact">
+            {
+                products.length > 0 ? (
+                    <table className="table table-zebra table-compact">
                 <thead>
                     {
                         tableHead
@@ -140,6 +142,18 @@ const Products = () => {
                     }
                 </tbody>
             </table>
+                ) : (
+                    <table class="table">
+        <tbody>
+          <tr>
+            <td class="loading">
+              <div class="bar"></div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+                )
+            }
         </section >
     );
 };
