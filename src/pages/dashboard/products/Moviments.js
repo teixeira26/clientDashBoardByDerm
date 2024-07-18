@@ -11,6 +11,7 @@ import { BACKEND_URL } from "../../../constants/constants";
 import NewMoviment from "../../../components/modals/newMoviment";
 import { createExcel } from "../../../hooks/useCreateExcel";
 
+
 const Moviments = () => {
   const tableHeadItems = [
     "Producto",
@@ -29,7 +30,7 @@ const Moviments = () => {
     "Fecha de Vencimiento",
   ];
 
-const [page, setPage] = useState([])
+const [page, setPage] = useState(0)
 
 
   const [createModalState, setCreateModalState] = useState(false)
@@ -62,6 +63,7 @@ const [page, setPage] = useState([])
 
   const [moviments, setMoviments] = useState([]);
   const [products, setProducts] = useState([]);
+  const [totalPages, setTotalPages] = useState(0);
 
   const createModalToggle = ()=>{
     setCreateModalState(!createModalState)
@@ -74,19 +76,37 @@ const [page, setPage] = useState([])
   }, []);
 
   useEffect(() => {
-    if(page.length === 0){
+    if(page === 0){
       fetch(`${BACKEND_URL}/moviments/getAll`)
       .then((res) => res.json())
       .then((products) => {
       setMoviments(products.data)});
     }
     else{
-      fetch(`${BACKEND_URL}/moviments/getAll?${page[0] === 'previous' ? 'endBefore' : 'startAfter'}=${page[1]}`)
+      fetch(`${BACKEND_URL}/moviments/getAll?${page}`)
       .then((res) => res.json())
       .then((products) => setMoviments(products.moviments));
     }
 
   }, [page]);
+
+  useEffect(() => {
+    fetch(`${BACKEND_URL}/moviments/getAll`)
+      .then((res) => res.json())
+      .then((data) => setTotalPages(data.pagination.totalPages));
+  }, []);
+
+  const preButton = ()=>{
+    if(page > 0){
+      setPage(page - 1)
+    }
+  }
+
+  const nextButton = ()=>{
+    setPage(page + 1)
+  }
+
+
 
   return (
     <section className="p-4 mt-16">
@@ -212,48 +232,64 @@ const [page, setPage] = useState([])
       </label> */}
 
       {/* Purchased Table */}
-      <table className="table table-zebra table-compact">
-        <thead>{tableHead}</thead>
-        <tbody>
+
+          {moviments.length > 0 ? (<table className="table table-zebra table-compact">
+          <thead>{tableHead}</thead>
+          <tbody>
           {moviments?.sort((a, b) => new Date(b.date) - new Date(a.date) ).map((moviment, index) => (
-            <TableRow
-              key={moviment._id}
-              tableRowsData={[
-                moviment.product,
-                moviment.quantity,
-                `X-0001-0000${moviment.referNumber}`,
-                moviment.date,
-                moviment.typeOfMoviment,
-                moviment.responsable,
-                moviment.typeOfAdressee,
-                moviment.suplierName,
-                moviment.description,
-
-                moviment.adresseeName,
-                moviment.productionOrder,
-                moviment.setTypeOfProduct,
-
-                moviment.lot,
-                moviment.expiration,
-
-                <span className="flex items-center gap-x-1">
-                  {/* <EditButton /> */}
-                  <DeleteButton
-                    deleteApiLink="https://stringlab-ims-server.herokuapp.com/api/purchases/pharmacy/"
-                    deleteURL={'/moviments/delete/'}
-                    itemId={moviment.id}
-                    name={moviment.tradeName}
-                  />
-                </span>,
-              ]}
-            />
-          ))}
+              <TableRow
+                key={moviment._id}
+                tableRowsData={[
+                  moviment.product,
+                  moviment.quantity,
+                  `X-0001-0000${moviment.referNumber}`,
+                  moviment.date,
+                  moviment.typeOfMoviment,
+                  moviment.responsable,
+                  moviment.typeOfAdressee,
+                  moviment.suplierName,
+                  moviment.description,
+  
+                  moviment.adresseeName,
+                  moviment.productionOrder,
+                  moviment.setTypeOfProduct,
+  
+                  moviment.lot,
+                  moviment.expiration,
+  
+                  <span className="flex items-center gap-x-1">
+                    {/* <EditButton /> */}
+                    <DeleteButton
+                      deleteApiLink="https://stringlab-ims-server.herokuapp.com/api/purchases/pharmacy/"
+                      deleteURL={'/moviments/delete/'}
+                      itemId={moviment.id}
+                      name={moviment.tradeName}
+                    />
+                  </span>,
+                ]}
+              />
+            )) }
+          </tbody>
+        </table>)
+        : <table class="table">
+        <tbody>
+          <tr>
+            <td class="loading">
+              <div class="bar"></div>
+            </td>
+          </tr>
         </tbody>
-      </table>
-      <div className="flex gap-6">
-      <button className={`mt-2  py-1 px-3 hover:bg-[#dddddd] rounded-[4px]`}><span className="font-semibold">{`< `}</span>{`Anterior`}</button>
-        <button className="mt-2  py-1 px-3 hover:bg-[#dddddd] rounded-[4px]">{`Proxima `}<span className="font-semibold">{`> `}</span></button>
-      </div>
+      </table> }
+
+      {
+        moviments.length > 0 && (
+          <div className="flex gap-6 items-center">
+            <button className={`  py-1 px-3 hover:bg-[#dddddd] rounded-[4px] ${page === 0 && 'cursor-not-allowed hover:bg-transparent'}`} onClick={preButton} ><span className="font-semibold">{`< `}</span>{`Anterior`}</button>
+            <span>{page}</span>
+            <button className={`  py-1 px-3 hover:bg-[#dddddd] rounded-[4px] ${page < totalPages && 'cursor-not-allowed hover:bg-transparent'}`}>{`Proxima `}<span className="font-semibold">{`> `}</span></button>
+          </div>
+        )
+      }
     </section>
   );
 };
