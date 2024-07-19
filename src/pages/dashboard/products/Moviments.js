@@ -30,7 +30,7 @@ const Moviments = () => {
     "Fecha de Vencimiento",
   ];
 
-const [page, setPage] = useState(0)
+const [page, setPage] = useState(1)
 
 
   const [createModalState, setCreateModalState] = useState(false)
@@ -52,9 +52,9 @@ const [page, setPage] = useState(0)
       document.getElementsByClassName('drawer-content')[0].style.overflow = '';  // Restaurar el scrollbar
     }
   
-    return () => {
+/*     return () => {
       document.getElementsByClassName('drawer-content')[0].style.overflow = '';  // Asegurar restauración al desmontar el componente
-    };
+    }; */
     
   }, [createModalState])
   
@@ -76,14 +76,14 @@ const [page, setPage] = useState(0)
   }, []);
 
   useEffect(() => {
-    if(page === 0){
-      fetch(`${BACKEND_URL}/moviments/getAll`)
+    if(page){
+      fetch(`${BACKEND_URL}/moviments/getAll?page=${page}`)
       .then((res) => res.json())
       .then((products) => {
       setMoviments(products.data)});
     }
     else{
-      fetch(`${BACKEND_URL}/moviments/getAll?${page}`)
+      fetch(`${BACKEND_URL}/moviments/getAll?page=${page}`)
       .then((res) => res.json())
       .then((products) => setMoviments(products.moviments));
     }
@@ -91,22 +91,22 @@ const [page, setPage] = useState(0)
   }, [page]);
 
   useEffect(() => {
-    fetch(`${BACKEND_URL}/moviments/getAll`)
+    fetch(`${BACKEND_URL}/moviments/getAll?page=${page}`)
       .then((res) => res.json())
       .then((data) => setTotalPages(data.pagination.totalPages));
   }, []);
 
   const preButton = ()=>{
-    if(page > 0){
+    if(page > 1){
       setPage(page - 1)
     }
   }
 
   const nextButton = ()=>{
-    setPage(page + 1)
+    if(page < totalPages){
+      setPage(page + 1)
+    }
   }
-
-
 
   return (
     <section className="p-4 mt-16">
@@ -284,9 +284,9 @@ const [page, setPage] = useState(0)
       {
         moviments.length > 0 && (
           <div className="flex gap-6 items-center">
-            <button className={`  py-1 px-3 hover:bg-[#dddddd] rounded-[4px] ${page === 0 && 'cursor-not-allowed hover:bg-transparent'}`} onClick={preButton} ><span className="font-semibold">{`< `}</span>{`Anterior`}</button>
+            <button className={`  py-1 px-3 hover:bg-[#dddddd] rounded-[4px] ${page === 1 ? 'cursor-not-allowed hover:bg-transparent' : ''}`} onClick={preButton} ><span className="font-semibold">{`< `}</span>{`Anterior`}</button>
             <span>{page}</span>
-            <button className={`  py-1 px-3 hover:bg-[#dddddd] rounded-[4px] ${page < totalPages && 'cursor-not-allowed hover:bg-transparent'}`}>{`Proxima `}<span className="font-semibold">{`> `}</span></button>
+            <button className={`  py-1 px-3 hover:bg-[#dddddd] rounded-[4px] ${page === totalPages ? 'cursor-not-allowed hover:bg-transparent' : ''}`} onClick={nextButton}>{`Proxima `}<span className="font-semibold">{`> `}</span></button>
           </div>
         )
       }
