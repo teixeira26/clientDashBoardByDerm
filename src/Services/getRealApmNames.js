@@ -37,7 +37,7 @@ export const getRealAPMName = (name) => {
     case "JS":
       return "Julia Stucki";
     case "JUNIN":
-      return "Delfina brignoni";
+      return "Thiago Caravaglia";
     case "LA PLATA":
       return "Franco Piccapietra";
     case "lean.visit":
