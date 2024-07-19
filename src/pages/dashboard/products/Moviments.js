@@ -12,6 +12,68 @@ import NewMoviment from "../../../components/modals/newMoviment";
 import { createExcel } from "../../../hooks/useCreateExcel";
 
 
+const Pagination = ({ totalPages, currentPage, onPageChange }) => {
+  const getPageNumbers = () => {
+      const delta = 2; // Número de páginas a mostrar alrededor de la página actual
+      let pages = [];
+
+      // Mostrar las primeras dos páginas
+      if (totalPages <= 5) {
+          pages = Array.from({ length: totalPages }, (_, i) => i + 1);
+      } else {
+          if (currentPage > 4) {
+              pages.push(1);
+              if (currentPage > 5) pages.push('...');
+          }
+          const start = Math.max(2, currentPage - delta);
+          const end = Math.min(totalPages - 1, currentPage + delta);
+          pages.push(...Array.from({ length: end - start + 1 }, (_, i) => start + i));
+          if (currentPage < totalPages - 3) {
+              if (currentPage < totalPages - 4) pages.push('...');
+              pages.push(totalPages);
+          }
+      }
+      return pages;
+  };
+
+  const handlePageChange = (page) => {
+      if (page !== currentPage && page > 0 && page <= totalPages) {
+          onPageChange(page);
+      }
+  };
+
+  return (
+      <div className="flex gap-2 items-center justify-center my-5">
+          <button
+              className={`py-1 px-3 hover:bg-gray-200 rounded-md ${currentPage === 1 ? 'cursor-not-allowed hover:bg-white bg-gray-200 opacity-50' : ''}`}
+              onClick={() => handlePageChange(currentPage - 1)}
+              disabled={currentPage === 1}
+          >
+              <span className="font-semibold">{`< `}</span>
+          </button>
+
+          {getPageNumbers().map((page, index) => (
+              <button
+                  key={index}
+                  className={`py-1 px-3 rounded-md font-semibold ${page === currentPage ? 'border-black border-[1px]' : 'hover:bg-gray-200'}`}
+                  onClick={() => page !== '...' && handlePageChange(page)}
+              >
+                  {page}
+              </button>
+          ))}
+
+          <button
+              className={`py-1 px-3 hover:bg-gray-200 rounded-md ${currentPage === totalPages ? 'cursor-not-allowed hover:bg-white bg-gray-200 opacity-50' : ''}`}
+              onClick={() => handlePageChange(currentPage + 1)}
+              disabled={currentPage === totalPages}
+          >
+              <span className="font-semibold">{`> `}</span>
+          </button>
+      </div>
+  );
+};
+
+
 const Moviments = () => {
   const tableHeadItems = [
     "Producto",
@@ -271,8 +333,8 @@ const [page, setPage] = useState(1)
             )) }
           </tbody>
         </table>)
-        : <table class="table">
-        <tbody>
+        : <table class="table1">
+        <tbody className="table-tbody">
           <tr>
             <td class="loading">
               <div class="bar"></div>
@@ -283,11 +345,12 @@ const [page, setPage] = useState(1)
 
       {
         moviments.length > 0 && (
-          <div className="flex gap-6 items-center">
-            <button className={`  py-1 px-3 hover:bg-[#dddddd] rounded-[4px] ${page === 1 ? 'cursor-not-allowed hover:bg-transparent' : ''}`} onClick={preButton} ><span className="font-semibold">{`< `}</span>{`Anterior`}</button>
-            <span>{page}</span>
-            <button className={`  py-1 px-3 hover:bg-[#dddddd] rounded-[4px] ${page === totalPages ? 'cursor-not-allowed hover:bg-transparent' : ''}`} onClick={nextButton}>{`Proxima `}<span className="font-semibold">{`> `}</span></button>
-          </div>
+          <Pagination
+
+            totalPages={totalPages}
+            currentPage={page}
+            onPageChange={setPage}
+          />
         )
       }
     </section>

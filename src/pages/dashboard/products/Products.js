@@ -172,7 +172,7 @@ const Products = () => {
                 </tbody>
             </table>
                 ) : (
-                    <table class="table">
+                    <table class="table1">
         <tbody>
           <tr>
             <td class="loading">
