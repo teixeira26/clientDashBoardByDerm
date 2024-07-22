@@ -161,8 +161,9 @@ export default function NewMoviment({products: productsReceived, createModalTogg
                 }} className={`btn flex col-span-3 items-center gap-x-2 bg-[#D76611] border-white text-white hover:bg-[#c65500] hover:border-white`}>
             Añadir
         </button>
-              <table className="table table-zebra table-compact col-span-3 z-0">
-        <thead>
+          <div className='col-span-3 max-h-[200px] overflow-y-scroll'>
+          <table className="table table-zebra table-compact col-span-3 z-0 w-full">
+        <thead >
 
 
         <tr>
@@ -194,6 +195,7 @@ export default function NewMoviment({products: productsReceived, createModalTogg
           ))}
         </tbody>
       </table>
+          </div>
     
       
               
