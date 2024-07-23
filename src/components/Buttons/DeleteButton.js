@@ -1,33 +1,38 @@
-import React from 'react';
-import { RiDeleteBin6Fill } from 'react-icons/ri';
-import { toast } from 'react-toastify';
-import { BACKEND_URL } from '../../constants/constants';
+import React, { useContext } from "react";
+import { RiDeleteBin6Fill } from "react-icons/ri";
+import { toast } from "react-toastify";
+import { BACKEND_URL } from "../../constants/constants";
+import { ReloadDataContext } from "../../contexts/reloadDataContext";
 
 const DeleteButton = ({ deleteURL, itemId }) => {
-    const deleteItem = _id => {
-        fetch(`${BACKEND_URL}${deleteURL}${_id}`, {
-            method: 'DELETE',
-            headers: {
-                'content-type': 'application/json'
-            },
-        })
-            .then(res => {
-                toast.success(
-                            <span>Producto Borrado con éxito 🗑.</span>
-                );
-                res.json()}).catch(
-                    ()=>toast.error('Hubo un error al intentar borrar el producto 😢')
-                )    
-    };
+	const { setReloadMovement, setReloadProduct } = useContext(ReloadDataContext);
+	const deleteItem = (_id) => {
+		fetch(`${BACKEND_URL}${deleteURL}${_id}`, {
+			method: "DELETE",
+			headers: {
+				"content-type": "application/json",
+			},
+		})
+			.then((res) => {
+				toast.success(<span>Producto Borrado con éxito 🗑.</span>);
+				if (deleteURL === "/moviments/delete/") {
+					setReloadMovement((prev) => !prev);
+				} else if (deleteURL === "/products/delete/") {
+					setReloadProduct((prev) => !prev);
+				}
+				res.json();
+			})
+			.catch(() => toast.error("Hubo un error al intentar borrar el producto 😢"));
+	};
 
-    return (
-        <button onClick={() => deleteItem(itemId)}
-            className="z-10 block p-1 text-red-700 transition-all bg-red-100 border-2 border-white rounded-full active:bg-red-50 hover:scale-110 focus:outline-none focus:ring"
-            type="button"
-        >
-            <RiDeleteBin6Fill />
-        </button>
-    );
+	return (
+		<button
+			onClick={() => deleteItem(itemId)}
+			className="z-10 block p-1 text-red-700 transition-all bg-red-100 border-2 border-white rounded-full active:bg-red-50 hover:scale-110 focus:outline-none focus:ring"
+			type="button">
+			<RiDeleteBin6Fill />
+		</button>
+	);
 };
 
 export default DeleteButton;
