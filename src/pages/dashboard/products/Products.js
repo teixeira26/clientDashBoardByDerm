@@ -17,6 +17,8 @@ import { createExcel } from "../../../hooks/useCreateExcel";
 import { BiEdit } from "react-icons/bi";
 import SelectDataPersonalized from "../../../components/molecules/filterSelect.js";
 import { ReloadDataContext } from "../../../contexts/reloadDataContext.js";
+import LotsModal from "../../../components/modals/LotsModal.js";
+import expand from "../../../Assets/expandir.png"
 
 const Products = () => {
 	const tableHeadItems = ["Nº de Artículo", "Nombre de Producto", "Descripción", "Cantidad Mínima en stock", "Cantidad"];
@@ -39,6 +41,7 @@ const Products = () => {
 	const [filters, setFilters] = useState([]);
 	const [categories, setCategories] = useState([]);
 	const [products, setProducts] = useState([]);
+	const [expandModal, setExpandModal] = useState(false);
 
 	// Ref for the modal checkbox
 	const modalCheckboxRef = useRef(null);
@@ -53,6 +56,12 @@ const Products = () => {
 				setProducts(products);
 			});
 	}, [reloadProduct]);
+
+	const [productModal, setProductModal] = useState();
+
+	const alterExpandModal = () => {
+		setExpandModal(!expandModal);
+	};
 
 	const addNewProduct = (event) => {
 		event.preventDefault();
@@ -87,7 +96,7 @@ const Products = () => {
 				name="Productos"
 				value={
 					products.filter((x) => {
-						if (filters.length > 0) return filters.includes(x.category);
+						if (filters.length > 0) return filters.includes(x.product);
 						else return x;
 					}).length
 				}
@@ -106,7 +115,7 @@ const Products = () => {
 			/>
 
 			<input type="checkbox" id="create-new-product" className="modal-toggle" ref={modalCheckboxRef} />
-			<label htmlFor="create-new-product" className="modal cursor-pointer">
+			<label htmlFor="create-new-product" className="modal h-screen z-[1000]">
 				<label className="modal-box lg:w-7/12 md:w-10/12 w-11/12 max-w-4xl relative" htmlFor="">
 					<ModalCloseButton modalId={"create-new-product"} />
 
@@ -181,6 +190,9 @@ const Products = () => {
 												<BiEdit />
 											</label>
 											<DeleteButton deleteURL={"/products/delete/"} itemId={product.id} />
+											<button className="ml-6 hover:scale-110 duration-300" onClick={()=>{alterExpandModal(); setProductModal(product)  }}>
+												<img src={expand} alt="" className="w-4"/>
+											</button>
 										</span>,
 									]}
 								/>
@@ -198,6 +210,11 @@ const Products = () => {
 					</tbody>
 				</table>
 			)}
+			{
+				expandModal && (
+					<LotsModal setExpandModal={setExpandModal} product={productModal}/>
+				)
+			}
 		</section>
 	);
 };

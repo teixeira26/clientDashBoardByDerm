@@ -7,6 +7,7 @@ import { ReloadDataContext } from "../../contexts/reloadDataContext";
 const DeleteButton = ({ deleteURL, itemId }) => {
 	const { setReloadMovement, setReloadProduct } = useContext(ReloadDataContext);
 	const deleteItem = (_id) => {
+		
 		fetch(`${BACKEND_URL}${deleteURL}${_id}`, {
 			method: "DELETE",
 			headers: {

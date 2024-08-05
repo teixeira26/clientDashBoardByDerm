@@ -103,8 +103,8 @@ export default function NewMoviment({ products: productsReceived, createModalTog
 	};
 
 	return (
-		<div className="absolute w-full h-full left-0 top-0 flex justify-center items-center">
-			<div className="bg-[#00000070] w-full h-full absolute left-0 top-0 z-[1000]" onClick={() => createModalToggle()}></div>
+		<div className="absolute w-full h-screen left-0 top-0 flex justify-center items-center">
+			<div className="bg-[#00000070] w-full h-full fixed left-0 top-0 z-[1000]" onClick={() => createModalToggle()}></div>
 
 			<label htmlFor="create-new-product" className=" cursor-pointer z-[100010] bg-[white] rounded-[4px] py-4">
 				<label className=" lg:w-10/12 md:w-11/12 w-full max-w-5xl relative" htmlFor="">
