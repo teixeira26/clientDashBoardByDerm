@@ -11,6 +11,7 @@ import { BACKEND_URL } from "../../../constants/constants";
 import NewMoviment from "../../../components/modals/newMoviment";
 import { createExcel } from "../../../hooks/useCreateExcel";
 import { ReloadDataContext } from "../../../contexts/reloadDataContext";
+import SelectDataPersonalized from "../../../components/molecules/filterSelect.js";
 
 const Pagination = ({ totalPages, currentPage, onPageChange }) => {
 	const getPageNumbers = () => {
@@ -136,25 +137,25 @@ const Moviments = () => {
 			.then((products) => setProducts(products));
 	}, []);
 
-	useEffect(() => {
-		if (page) {
-			fetch(`${BACKEND_URL}/moviments/getAll?page=${page}`)
-				.then((res) => res.json())
-				.then((products) => {
-					setMoviments(products.data);
-				});
-		} else {
-			fetch(`${BACKEND_URL}/moviments/getAll?page=${page}`)
-				.then((res) => res.json())
-				.then((products) => setMoviments(products.moviments));
-		}
-	}, [page, reloadMovement]);
+	const [categories, setCategories] = useState([]);
+	const [filters, setFilters] = useState([]);
+	const [search, setSearch] = useState("");
+
+	const setSelectedFilters = (selectedOptions) => {
+		setFilters(selectedOptions);
+	};
 
 	useEffect(() => {
-		fetch(`${BACKEND_URL}/moviments/getAll?page=${page}`)
+		fetch(`${BACKEND_URL}/moviments/getAll`)
 			.then((res) => res.json())
-			.then((data) => setTotalPages(data.pagination.totalPages));
-	}, []);
+			.then((products) => {
+				let set = new Set(products.map((product) => product.product));
+				let arraySinDuplicados = [...set];
+				setCategories(arraySinDuplicados);
+				setMoviments(products);
+			});
+			
+	}, [moviments]);
 
 	return (
 		<section className="p-4 mt-16">
@@ -174,6 +175,9 @@ const Moviments = () => {
 					</div>,
 				]}
 			/>
+						<div className="mb-4 relative mt-[-16px] z-[100]">
+				<SelectDataPersonalized options={categories} setSelectedFilters={setSelectedFilters} setSearch={setSearch}/>
+			</div>
 
 			{/* create new pharmacy product purchase */}
 			{createModalState && (
@@ -289,8 +293,10 @@ const Moviments = () => {
 				<table className="table table-zebra table-compact">
 					<thead>{tableHead}</thead>
 					<tbody>
-						{moviments
-							?.sort((a, b) => new Date(b.date) - new Date(a.date))
+						{moviments.filter((x) => {
+						if (filters.length > 0) return filters.includes(x.product);
+						else return x;
+					})?.sort((a, b) => new Date(b.date) - new Date(a.date))
 							.map((moviment, index) => (
 								<TableRow
 									key={moviment._id}
@@ -337,8 +343,6 @@ const Moviments = () => {
 					</tbody>
 				</table>
 			)}
-
-			{moviments.length > 0 && <Pagination totalPages={totalPages} currentPage={page} onPageChange={setPage} />}
 		</section>
 	);
 };

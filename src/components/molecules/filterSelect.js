@@ -25,7 +25,7 @@ const DropdownIndicator = (props
  
 
 
-export default ({options, setSelectedFilters}) => {
+export default ({options, setSelectedFilters, setSearch}) => {
         const handleChange = (selectedOptions) => {
           // Llamar a la función onChange pasada como prop
 
@@ -35,15 +35,22 @@ export default ({options, setSelectedFilters}) => {
           }
         };
 
-    return(
-  <Select
-    closeMenuOnSelect={false}
-    components={{ DropdownIndicator }}
-    defaultValue={[]}
-    isMulti
-    options={options.map(x=>{return {value: x, label: x}})}
-    styles={customStyles}
-    onChange={handleChange}
-
-  />
-)};
+        const handleInputChange = (inputValue) => {
+          setSearch(inputValue); // Llama a setSearch con el valor de búsqueda
+          return inputValue; // Retorna el valor para que react-select lo maneje
+        };
+      
+        return (
+          <Select
+            closeMenuOnSelect={false}
+            components={{ DropdownIndicator: null }} // Opcional: personalizar el dropdown
+            defaultValue={[]}
+            isMulti
+            options={options?.map(x => ({ value: x, label: x }))}
+            styles={customStyles}
+            onChange={handleChange}
+            onInputChange={handleInputChange} // Captura el cambio en el campo de búsqueda
+          />
+        );
+      };
+      
