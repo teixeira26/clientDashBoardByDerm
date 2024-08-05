@@ -149,13 +149,14 @@ const Moviments = () => {
 		fetch(`${BACKEND_URL}/moviments/getAll`)
 			.then((res) => res.json())
 			.then((products) => {
-				let set = new Set(products.map((product) => product.product));
+				let set = new Set(products.map((product) => product.referNumber));
 				let arraySinDuplicados = [...set];
+				console.log(products);
 				setCategories(arraySinDuplicados);
 				setMoviments(products);
 			});
 			
-	}, [moviments]);
+	}, [reloadMovement]);
 
 	return (
 		<section className="p-4 mt-16">
@@ -294,7 +295,7 @@ const Moviments = () => {
 					<thead>{tableHead}</thead>
 					<tbody>
 						{moviments.filter((x) => {
-						if (filters.length > 0) return filters.includes(x.product);
+						if (filters.length > 0) return filters.includes(x.referNumber);
 						else return x;
 					})?.sort((a, b) => new Date(b.date) - new Date(a.date))
 							.map((moviment, index) => (
