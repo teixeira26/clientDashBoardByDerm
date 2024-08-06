@@ -5,8 +5,6 @@ import { BACKEND_URL } from '../../constants/constants'
 const LotsModal = ({setExpandModal, product}) => {
   const {id} = product
 
-  console.log(product.id)
-
   const [lots, setLots] = useState([])
 
 
@@ -33,8 +31,9 @@ const LotsModal = ({setExpandModal, product}) => {
                   <div className='w-full flex justify-end'><ModalCloseButton onClick={setExpandModal}/></div>
                   <div className="w-full h-full flex justify-center items-center">
                     { lots.map((lot, index) => (
-                      <div key={index} className="w-[100px] h-[100px] bg-red-500 rounded-lg m-4">
-                        <p>{lot.id}</p>
+                      <div key={index} className="bg-orange-500 rounded-lg m-4">
+                        <p className="text-white p-4">Lot ID: {lot.LotId}</p>
+
                       </div>
                     ))}
                   </div>

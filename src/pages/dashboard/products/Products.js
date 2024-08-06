@@ -53,6 +53,7 @@ const Products = () => {
 				let set = new Set(products.map((product) => product.category));
 				let arraySinDuplicados = [...set];
 				setCategories(arraySinDuplicados);
+				console.log(products);
 				setProducts(products);
 			});
 	}, [reloadProduct]);

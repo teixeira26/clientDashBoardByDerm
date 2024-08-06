@@ -13,69 +13,7 @@ import { createExcel } from "../../../hooks/useCreateExcel";
 import { ReloadDataContext } from "../../../contexts/reloadDataContext";
 import SelectDataPersonalized from "../../../components/molecules/filterSelect.js";
 
-const Pagination = ({ totalPages, currentPage, onPageChange }) => {
-	const getPageNumbers = () => {
-		const delta = 2; // Número de páginas a mostrar alrededor de la página actual
-		let pages = [];
 
-		// Mostrar las primeras dos páginas
-		if (totalPages <= 5) {
-			pages = Array.from({ length: totalPages }, (_, i) => i + 1);
-		} else {
-			if (currentPage > 4) {
-				pages.push(1);
-				if (currentPage > 5) pages.push("...");
-			}
-			const start = Math.max(2, currentPage - delta);
-			const end = Math.min(totalPages - 1, currentPage + delta);
-			pages.push(...Array.from({ length: end - start + 1 }, (_, i) => start + i));
-			if (currentPage < totalPages - 3) {
-				if (currentPage < totalPages - 4) pages.push("...");
-				pages.push(totalPages);
-			}
-		}
-		return pages;
-	};
-
-	const handlePageChange = (page) => {
-		if (page !== currentPage && page > 0 && page <= totalPages) {
-			onPageChange(page);
-		}
-	};
-
-	return (
-		<div className="flex gap-2 items-center justify-center my-5">
-			<button
-				className={`py-1 px-3 hover:bg-gray-200 rounded-md ${
-					currentPage === 1 ? "cursor-not-allowed hover:bg-white bg-gray-200 opacity-50" : ""
-				}`}
-				onClick={() => handlePageChange(currentPage - 1)}
-				disabled={currentPage === 1}>
-				<span className="font-semibold">{`< `}</span>
-			</button>
-
-			{getPageNumbers().map((page, index) => (
-				<button
-					key={index}
-					className={`py-1 px-3 rounded-md font-semibold ${
-						page === currentPage ? "border-black border-[1px]" : "hover:bg-gray-200"
-					}`}
-					onClick={() => page !== "..." && handlePageChange(page)}>
-					{page}
-				</button>
-			))}
-
-			<button
-				className={`py-1 px-3 hover:bg-gray-200 rounded-md ${
-					currentPage === totalPages ? "cursor-not-allowed hover:bg-white bg-gray-200 opacity-50" : ""
-				}`}
-				onClick={() => handlePageChange(currentPage + 1)}
-				disabled={currentPage === totalPages}>
-				<span className="font-semibold">{`> `}</span>
-			</button>
-		</div>
-	);
-};
 
 const Moviments = () => {
 	const tableHeadItems = [
@@ -95,7 +33,6 @@ const Moviments = () => {
 		"Fecha de Vencimiento",
 	];
 
-	const [page, setPage] = useState(1);
 
 	const [createModalState, setCreateModalState] = useState(false);
 
@@ -123,7 +60,6 @@ const Moviments = () => {
 
 	const [moviments, setMoviments] = useState([]);
 	const [products, setProducts] = useState([]);
-	const [totalPages, setTotalPages] = useState(0);
 
 	const { reloadMovement } = useContext(ReloadDataContext);
 
@@ -132,9 +68,11 @@ const Moviments = () => {
 	};
 
 	useEffect(() => {
-		fetch(`${BACKEND_URL}/products/getAll`)
+		fetch(`${BACKEND_URL}/products/all`)
 			.then((res) => res.json())
-			.then((products) => setProducts(products));
+			.then((products) => {
+				setProducts(products);
+			});
 	}, []);
 
 	const [categories, setCategories] = useState([]);
@@ -151,7 +89,6 @@ const Moviments = () => {
 			.then((products) => {
 				let set = new Set(products.map((product) => product.referNumber));
 				let arraySinDuplicados = [...set];
-				console.log(products);
 				setCategories(arraySinDuplicados);
 				setMoviments(products);
 			});

@@ -74,6 +74,8 @@ export default function NewMoviment({ products: productsReceived, createModalTog
 					typeOfAdressee,
 				};
 
+				console.log(productDetails);
+
 				return fetch(`${BACKEND_URL}/moviments/add`, {
 					method: "POST",
 					headers: {
@@ -87,6 +89,7 @@ export default function NewMoviment({ products: productsReceived, createModalTog
 					return res.json();
 				});
 			});
+			
 
 			try {
 				await Promise.all(requests);
