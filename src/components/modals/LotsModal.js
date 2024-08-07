@@ -11,7 +11,7 @@ const LotsModal = ({setExpandModal, product}) => {
 
   useEffect(() => {
     const fetchLots = async () => {
-      const res = await fetch(`http://localhost:3003/lots/getAll/${id}`)
+      const res = await fetch(`${BACKEND_URL}/lots/getAll/${id}`)
       const data = await res.json()
       setLots(data.lotsWithBoxes)
       setTotalBoxes(data.totalBoxCount)
