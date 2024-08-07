@@ -191,7 +191,7 @@ const Products = () => {
 								/* if (filters.length > 0) return filters.includes(x.category);
 								else return x; */
 								if (filters.length > 0 && filtersProduct.length > 0) {
-									return filters.includes(x.category) && filtersProduct.includes(x.product);
+									return filters.includes(x.category) && filtersProduct.includes(x.name);
 								  } else if (filters.length > 0) {
 									return filters.includes(x.category);
 								  } else if (filtersProduct.length > 0) {
