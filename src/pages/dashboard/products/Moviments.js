@@ -237,7 +237,7 @@ const Moviments = () => {
 					})?.sort((a, b) => new Date(b.date) - new Date(a.date))
 							.map((moviment, index) => (
 								<TableRow
-									key={moviment._id}
+									key={index}
 									tableRowsData={[
 										moviment.product,
 										moviment.quantity,
@@ -271,11 +271,11 @@ const Moviments = () => {
 					</tbody>
 				</table>
 			) : (
-				<table class="table1">
+				<table className="table1">
 					<tbody className="table-tbody">
 						<tr>
-							<td class="loading">
-								<div class="bar"></div>
+							<td className="loading">
+								<div className="bar"></div>
 							</td>
 						</tr>
 					</tbody>
