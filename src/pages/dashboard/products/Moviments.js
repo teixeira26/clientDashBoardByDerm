@@ -75,12 +75,19 @@ const Moviments = () => {
 			});
 	}, []);
 
-	const [categories, setCategories] = useState([]);
-	const [filters, setFilters] = useState([]);
-	const [search, setSearch] = useState("");
+	const [categoriesRemito, setCategoriesRemito] = useState([]);
+	const [filtersRemito, setFiltersRemito] = useState([]);
+	const [categoriesProduct, setCategoriesProduct] = useState([]);
+	const [filtersProduct, setFiltersProduct] = useState([]);
 
-	const setSelectedFilters = (selectedOptions) => {
-		setFilters(selectedOptions);
+
+	const setSelectedFiltersRemito = (selectedOptions) => {
+		setFiltersRemito(selectedOptions);
+	};
+
+
+	const setSelectedFiltersProduct = (selectedOptions) => {
+		setFiltersProduct(selectedOptions);
 	};
 
 	useEffect(() => {
@@ -89,7 +96,12 @@ const Moviments = () => {
 			.then((products) => {
 				let set = new Set(products.map((product) => product.referNumber));
 				let arraySinDuplicados = [...set];
-				setCategories(arraySinDuplicados);
+				setCategoriesRemito(arraySinDuplicados);
+
+				let set2 = new Set(products.map((product) => product.product));
+				let arraySinDuplicados2 = [...set2];
+				setCategoriesProduct(arraySinDuplicados2);
+
 				setMoviments(products);
 			});
 			
@@ -113,8 +125,15 @@ const Moviments = () => {
 					</div>,
 				]}
 			/>
-						<div className="mb-4 relative mt-[-16px] z-[100]">
-				<SelectDataPersonalized options={categories} setSelectedFilters={setSelectedFilters} setSearch={setSearch}/>
+			<div className="grid grid-cols-2 gap-x-4 gap-y-2">
+				<div className="mb-4 mt-[-16px] z-[100] flex flex-col gap-2">
+					<p className="text-xl">Nombre producto</p>
+					<SelectDataPersonalized options={categoriesProduct} setSelectedFilters={setSelectedFiltersProduct}/>
+				</div>
+				<div className="mb-4 mt-[-16px] z-[100] flex flex-col gap-2">
+					<p className="text-xl">Numero remito</p>
+					<SelectDataPersonalized options={categoriesRemito} setSelectedFilters={setSelectedFiltersRemito}/>
+				</div>
 			</div>
 
 			{/* create new pharmacy product purchase */}
@@ -232,8 +251,15 @@ const Moviments = () => {
 					<thead>{tableHead}</thead>
 					<tbody>
 						{moviments.filter((x) => {
-						if (filters.length > 0) return filters.includes(x.referNumber);
-						else return x;
+						if (filtersRemito.length > 0 && filtersProduct.length > 0) {
+							return filtersRemito.includes(x.referNumber) && filtersProduct.includes(x.product);
+						  } else if (filtersRemito.length > 0) {
+							return filtersRemito.includes(x.referNumber);
+						  } else if (filtersProduct.length > 0) {
+							return filtersProduct.includes(x.product);
+						  } else {
+							return true; // Devuelve todos los movimientos si ambos filtros están vacíos
+						  }
 					})?.sort((a, b) => new Date(b.date) - new Date(a.date))
 							.map((moviment, index) => (
 								<TableRow

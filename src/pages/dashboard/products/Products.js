@@ -5,7 +5,6 @@ import NewButton from "../../../components/Buttons/NewButton";
 import Input from "../../../components/form/Input";
 import ModalCloseButton from "../../../components/Buttons/ModalCloseButton";
 import ModalHeading from "../../../components/headings/ModalHeading";
-import RefreshButton from "../../../components/Buttons/RefreshButton";
 import TableRow from "../../../components/TableRow";
 import EditButton from "../../../components/Buttons/EditButton";
 import DeleteButton from "../../../components/Buttons/DeleteButton";
@@ -53,7 +52,11 @@ const Products = () => {
 				let set = new Set(products.map((product) => product.category));
 				let arraySinDuplicados = [...set];
 				setCategories(arraySinDuplicados);
-				console.log(products);
+
+				let set2 = new Set(products.map((product) => product.name));
+				let arraySinDuplicados2 = [...set2];
+				setCategoriesProduct(arraySinDuplicados2);
+
 				setProducts(products);
 			});
 	}, [reloadProduct]);
@@ -89,6 +92,15 @@ const Products = () => {
 	const setSelectedFilters = (selectedOptions) => {
 		setFilters(selectedOptions);
 	};
+
+	const [categoriesProduct, setCategoriesProduct] = useState([]);
+	const [filtersProduct, setFiltersProduct] = useState([]);
+
+
+	const setSelectedFiltersProduct = (selectedOptions) => {
+		setFiltersProduct(selectedOptions);
+	};
+
 
 	return (
 		<section className="p-4 mt-16">
@@ -158,8 +170,16 @@ const Products = () => {
 					</form>
 				</label>
 			</label>
-			<div className="mb-4 relative mt-[-16px] z-[100]">
-				<SelectDataPersonalized options={categories} setSelectedFilters={setSelectedFilters} />
+
+			<div className="grid grid-cols-2 gap-x-4 gap-y-2">
+				<div className="mb-4 mt-[-16px] z-[100] flex flex-col gap-2">
+					<p className="text-xl">Nombre producto</p>
+					<SelectDataPersonalized options={categoriesProduct} setSelectedFilters={setSelectedFiltersProduct}/>
+				</div>
+				<div className="mb-4 mt-[-16px] z-[100] flex flex-col gap-2">
+					<p className="text-xl">Categoría</p>
+					<SelectDataPersonalized options={categories} setSelectedFilters={setSelectedFilters} />
+				</div>
 			</div>
 
 			{products.length > 0 ? (
@@ -168,8 +188,17 @@ const Products = () => {
 					<tbody>
 						{products
 							.filter((x) => {
-								if (filters.length > 0) return filters.includes(x.category);
-								else return x;
+								/* if (filters.length > 0) return filters.includes(x.category);
+								else return x; */
+								if (filters.length > 0 && filtersProduct.length > 0) {
+									return filters.includes(x.category) && filtersProduct.includes(x.product);
+								  } else if (filters.length > 0) {
+									return filters.includes(x.category);
+								  } else if (filtersProduct.length > 0) {
+									return filtersProduct.includes(x.name);
+								  } else {
+									return true; // Devuelve todos los movimientos si ambos filtros están vacíos
+								  }
 							})
 							.map((product, index) => (
 								<TableRow
