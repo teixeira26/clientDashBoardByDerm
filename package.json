@@ -34,7 +34,8 @@
     "tailwindcss-animate": "^1.0.7",
     "tw-elements": "^1.0.0-alpha12",
     "web-vitals": "^2.1.4",
-    "xlsx": "^0.18.5"
+    "xlsx": "^0.18.5",
+    "xlsx-js-style": "^1.2.0"
   },
   "scripts": {
     "start": "react-scripts start",
