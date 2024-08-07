@@ -6,8 +6,8 @@ const Select = ({ title = 'Select Field', name, isRequired, id, onchange, option
             <label className="label">
                 <span className="label-text">{title}</span>
             </label>
-            <select id={id} className="select select-bordered select-xs h-[38px] rounded-[4px]  w-full max-w-xs" name={name} required={isRequired} onChange={onchange}>
-                <option disabled selected>Elija una opción</option>
+            <select id={id} defaultValue={`Elija una opción`} className="select select-bordered select-xs h-[38px] rounded-[4px]  w-full max-w-xs" name={name} required={isRequired} onChange={onchange}>
+                <option disabled>Elija una opción</option>
 
                 {
                     options.map((option, index) => <option key={index}>{option}</option>)

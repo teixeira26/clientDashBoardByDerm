@@ -2,7 +2,7 @@ import React from 'react';
 
 const Loader = () => {
     return (
-        <div class="spinner"></div>
+        <div className="spinner"></div>
     )
 }
 
@@ -15,7 +15,9 @@ const DashboardPageHeading = ({ name, value, buttons }) => {
 
             <div className='flex items-center gap-x-4'>
                 {
-                    buttons.map(button => button)
+                    buttons.map((button, index) => {
+                        return <div key={index} >{button}</div>
+                    })
                 }
             </div>
         </div>
