@@ -107,7 +107,6 @@ const Moviments = () => {
 			
 	}, [reloadMovement]);
 
-	console.log(moviments);
 
 	return (
 		<section className="p-4 mt-16">

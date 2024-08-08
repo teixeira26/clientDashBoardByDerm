@@ -1,18 +1,25 @@
 import * as XLSX from 'xlsx-js-style';
 
-export const createExcel = (info, title) => {
+export const createExcel = (filterCategory, info, title) => {
     const validInfo = info.filter(item => item.category && item.name);
 
     const priorityCategories = ["Producto Final", "Testers", "Envases"];
     const priorityInfo = validInfo.filter(item => priorityCategories.includes(item.category));
     const otherInfo = validInfo.filter(item => !priorityCategories.includes(item.category));
 
-    const sortedInfo = [
+    let sortedInfo = [
         ...priorityCategories.flatMap(category => priorityInfo.filter(item => item.category === category)),
         ...otherInfo.sort((a, b) => {
             return a.category.localeCompare(b.category) || a.name.localeCompare(b.name);
         })
     ];
+
+    // Filtrar por todas las categorías en filterCategory
+    if (filterCategory && filterCategory.length > 0) {
+        sortedInfo = sortedInfo.filter(item => 
+            filterCategory.includes(item.category)
+        );
+    }
 
     if (sortedInfo.length === 0) {
         console.error("No valid data to write to Excel.");

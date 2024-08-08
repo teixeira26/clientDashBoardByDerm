@@ -118,6 +118,7 @@ const Products = () => {
 					<div
 						onClick={() =>
 							createExcel(
+								filters,
 								products,
 								`stock valorizado a fecha ${new Date().getDate()}_${new Date().getMonth() + 1}_${new Date().getFullYear()}`
 							)
