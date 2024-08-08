@@ -55,13 +55,13 @@ export const createExcel = (filterCategory, info, title) => {
     worksheet['!cols'] = columnWidths;
 
     const headerStyle = {
-        font: { bold: true, sz: 14, color: { rgb: "FFFFFF" } },
-        fill: { fgColor: { rgb: "4F81BD" } }
+        font: { bold: true, sz: 16, color: { rgb: "FFFFFF" } }, // Blanco
+        fill: { fgColor: { rgb: "4F81BD" } } // Azul de fondo
     };
 
-    worksheet['A1'].s = headerStyle;
-    worksheet['B1'].s = headerStyle;
-    worksheet['C1'].s = headerStyle;
+    // Aplicar el estilo de encabezado a todas las celdas de la primera fila
+    const firstRowCells = ['A1', 'B1', 'C1'];
+
 
     // Aplicar colores alternos a las filas
     const rows = XLSX.utils.decode_range(worksheet['!ref']);
@@ -90,6 +90,12 @@ export const createExcel = (filterCategory, info, title) => {
             if (!worksheet[cellAddress].s) worksheet[cellAddress].s = {};
             worksheet[cellAddress].s.font = { sz: 28, bold: true, color: { rgb: "000000" } }; // Aumentar tamaño y poner en negrita
         }
+    });
+
+    firstRowCells.forEach(cell => {
+        if (!worksheet[cell].s) worksheet[cell].s = {}; // Asegúrate de que existe el objeto de estilo
+        worksheet[cell].s.font = { ...headerStyle.font }; // Asigna el estilo de la fuente
+        worksheet[cell].s.fill = { ...headerStyle.fill }; // Asigna el color de fondo
     });
 
     XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
