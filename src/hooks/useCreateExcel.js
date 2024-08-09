@@ -55,7 +55,7 @@ export const createExcel = (filterCategory, info, title) => {
     worksheet['!cols'] = columnWidths;
 
     const headerStyle = {
-        font: { bold: true, sz: 16, color: { rgb: "FFFFFF" } }, // Blanco
+        font: { bold: true, sz: 20, color: { rgb: "FFFFFF" } }, // Blanco
         fill: { fgColor: { rgb: "4F81BD" } } // Azul de fondo
     };
 
